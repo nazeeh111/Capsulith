@@ -29,8 +29,8 @@
       "sha256": "a91ea57951156499cd1c9f22aba0d248a7691fe8fcf4283625a124f865ffcb28"
     },
     "check-node.cjs": {
-      "bytes": 2522,
-      "sha256": "1da63e3ce952235f54468e3c0a0fd9c5f20149af78a9fd2e3b8a1bf82d4b2155"
+      "bytes": 3058,
+      "sha256": "6165ae159db453176ee0245ebef66417fa81fdcc24133197c530f7d7536a5c93"
     },
     "contract.json": {
       "bytes": 358,
