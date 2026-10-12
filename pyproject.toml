@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "capsulith"
+version = "0.1.0"
+description = "Extract compiled ARM64 features into portable callable machine-code capsules"
+readme = "README.md"
+requires-python = ">=3.10"
+keywords = ["binary-analysis", "arm64", "mach-o", "webassembly", "emulation"]
+license = {text = "GPL-2.0-only"}
+dependencies = ["capstone==5.0.9"]
+
+[project.urls]
+Repository = "https://github.com/nazeeh111/Capsulith"
+Issues = "https://github.com/nazeeh111/Capsulith/issues"
+
+[project.scripts]
+capsulith = "capsulith.cli:main"
+
+[tool.setuptools]
+packages = ["capsulith"]
+include-package-data = true
+
+[tool.setuptools.package-data]
+capsulith = ["assets/**/*"]

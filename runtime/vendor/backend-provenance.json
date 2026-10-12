@@ -1,0 +1,12 @@
+{
+  "package": "@alexaltea/unicorn-js",
+  "version": "2.1.4",
+  "architecture": "aarch64",
+  "bundle": "unicorn_aarch64.js",
+  "bundleSHA256": "b497aa99d973f0a5eb27fe7e14e8d32f76298bf6cc6008f9035c4a8d8b91cb37",
+  "upstream": "https://github.com/AlexAltea/unicorn.js",
+  "sourceCommit": "fdfcc4fd5e7d4ceeebe6b4d65b19eea4aa655e5d",
+  "unicornSubmoduleCommit": "8028ec436f2d9376525352dd38ed9ed6b9f6be10",
+  "license": "GPL-2.0-only",
+  "notes": "Bundle copied byte-for-byte from npm 2.1.4 architecture build. Source archive and preserved notices accompany this distribution; a local reproducible rebuild of the npm bundle has not been established."
+}

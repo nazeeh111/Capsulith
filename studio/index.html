@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#eceee5" />
+    <title>Capsulith · Native transplant studio</title>
+    <link rel="icon" href="/studio/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/studio/styles.css" />
+    <script type="module" src="/studio/app.js"></script>
+  </head>
+  <body>
+    <header class="masthead">
+      <a href="/" class="brand" aria-label="Capsulith studio home"
+        ><svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <path
+            d="M9 3h14l6 6v14l-6 6H9l-6-6V9Z"
+            stroke="currentColor"
+            stroke-width="2"
+          />
+          <path d="M3 12h26M3 20h26M12 3v26M20 3v26" stroke="currentColor" />
+          <path d="M12 12h8v8h-8z" fill="currentColor" /></svg
+        ><span
+          >capsulith<span class="brand-sub"
+            >native transplant studio</span
+          ></span
+        ></a
+      >
+      <div class="environment">
+        <span class="status-dot"></span> Local workspace
+        <span class="architecture">ARM64 / MACH-O</span>
+      </div>
+      <button
+        id="reset"
+        class="quiet"
+        title="Clear capsule and execution; retain uploaded artifact"
+      >
+        Reset workbench
+      </button>
+    </header>
+    <div class="intro">
+      <div>
+        <span class="eyebrow">COMPILED ONCE. CALLABLE ELSEWHERE.</span>
+        <h1>Keep the instructions.<br /><span>Change the habitat.</span></h1>
+      </div>
+      <p>
+        Extract a native function and its dependencies.<br />Declare its calling
+        contract. Execute the original<br class="desktop-break" />
+        bytes in a portable ARM64 runtime.
+      </p>
+      <div class="intro-mark" aria-hidden="true">
+        <span>01</span>
+        <div>ARTIFACT<br />↓ CAPSULE<br />↓ CALL</div>
+      </div>
+    </div>
+    <nav class="phases" aria-label="Workflow">
+      <span id="phase-artifact" class="phase active"><b>01</b> Artifact</span
+      ><span id="phase-capsule" class="phase"><b>02</b> Capsule & contract</span
+      ><span id="phase-run" class="phase"><b>03</b> Execution evidence</span>
+    </nav>
+    <div
+      id="notice"
+      class="notice"
+      role="status"
+      aria-live="polite"
+      hidden
+    ></div>
+    <main class="studio">
+      <aside class="artifact-pane">
+        <div class="pane-heading">
+          <h2>Source artifact</h2>
+          <span class="micro">01 / INTAKE</span>
+        </div>
+        <label class="dropzone" id="dropzone" for="artifact-file"
+          ><input id="artifact-file" type="file" accept=".dylib,.so,.bin" /><svg
+            viewBox="0 0 32 32"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M8 2h10l7 7v21H8Z"
+              stroke="currentColor"
+              stroke-width="1.5"
+            />
+            <path
+              d="M18 2v7h7M12 16h9M12 21h9"
+              stroke="currentColor"
+              stroke-width="1.5"
+            /></svg
+          ><strong id="file-label">Drop a compiled artifact</strong
+          ><span>or choose a file</span
+          ><small>ARM64 Mach-O dylib · up to 32 MiB</small></label
+        >
+        <div id="artifact-info" hidden></div>
+        <div class="inventory-head">
+          <h3>Function inventory</h3>
+          <span id="function-count" class="count">0</span>
+        </div>
+        <label class="search-label"
+          ><span class="sr-only">Find function by name or address</span
+          ><input
+            id="function-search"
+            type="search"
+            placeholder="Filter name or address"
+            disabled
+        /></label>
+        <p id="inventory-note" class="muted small">
+          Function boundaries come from the artifact. Dependency support is
+          checked on extraction.
+        </p>
+        <div id="function-list" class="function-list">
+          <div class="empty-inventory">
+            <span class="crosshair">+</span>
+            <p>
+              No artifact selected.<br />Upload a dylib or open a specimen
+              below.
+            </p>
+          </div>
+        </div>
+        <div id="selected-function" hidden></div>
+        <button id="extract" class="primary full" disabled>
+          Extract selected function <span>↗</span>
+        </button>
+        <section class="specimens">
+          <div class="inventory-head">
+            <h3>Real specimens</h3>
+            <span class="micro">TRY THE FLOW</span>
+          </div>
+          <div id="examples"><p class="muted small">Loading specimens…</p></div>
+          <p class="small muted">
+            Original compiled bytes. Execution starts only when you press Run.
+          </p>
+        </section>
+      </aside>
+      <section class="work-pane" aria-label="Capsule workspace">
+        <div class="pane-heading">
+          <h2 id="capsule-title">Capsule workbench</h2>
+          <span id="capsule-state" class="badge">AWAITING SOURCE</span>
+        </div>
+        <div id="capsule-empty" class="capsule-empty">
+          <div class="transplant-diagram" aria-hidden="true">
+            <div class="native-block">1010<br />0101<br />1100</div>
+            <span class="transfer-line">→</span>
+            <div class="capsule-block">1010<br />0101<br />1100</div>
+          </div>
+          <h3>A function, with everything it needs.</h3>
+          <p>
+            The capsule keeps original code and readonly data,<br />with a
+            reviewable record of included dependencies.
+          </p>
+          <div class="empty-legend">
+            <span><i class="code-dot"></i> Original code</span
+            ><span><i class="data-dot"></i> Readonly data</span
+            ><span><i class="import-dot"></i> Declared imports</span>
+          </div>
+          <p class="small empty-limit">
+            First scope: direct control flow and bounded integer / buffer
+            contracts.<br />Unsupported dependencies are diagnosed during
+            extraction.
+          </p>
+        </div>
+        <div id="capsule-content" hidden>
+          <div id="capsule-summary" class="capsule-summary"></div>
+          <div class="tabs" role="tablist" aria-label="Capsule views">
+            <button
+              id="contract-tab"
+              role="tab"
+              aria-selected="true"
+              aria-controls="contract-panel"
+            >
+              Calling contract</button
+            ><button
+              id="evidence-tab"
+              role="tab"
+              aria-selected="false"
+              aria-controls="evidence-panel"
+              tabindex="-1"
+            >
+              Original bytes & dependencies
+            </button>
+          </div>
+          <section
+            id="contract-panel"
+            role="tabpanel"
+            aria-labelledby="contract-tab"
+          >
+            <div class="contract-disclosure">
+              <span class="declaration-mark">!</span>
+              <p>
+                <strong>Caller-declared prototype</strong><br />The artifact
+                does not supply an inferred calling contract. You declare buffer
+                access, register arguments and return type.
+              </p>
+            </div>
+            <div class="section-title">
+              <h3>Buffers & input bytes</h3>
+              <button id="add-buffer" class="text-button">+ Add buffer</button>
+            </div>
+            <div id="buffer-editor"></div>
+            <div class="section-title">
+              <h3>Register arguments</h3>
+              <button id="add-arg" class="text-button">+ Add argument</button>
+            </div>
+            <p class="small muted tight">
+              Arguments map in order to ARM64 registers x0–x7.
+            </p>
+            <div id="arg-editor"></div>
+            <div class="return-row">
+              <label
+                >Return value<select id="return-type">
+                  <option>i32</option>
+                  <option>u32</option>
+                  <option>i64</option>
+                  <option>u64</option>
+                </select></label
+              >
+              <p class="small muted">
+                i = signed · u = unsigned<br />64-bit values use decimal
+                strings.
+              </p>
+            </div>
+            <div class="section-title">
+              <h3>Explicit import permissions</h3>
+            </div>
+            <div class="import-checks" id="import-checks">
+              <label><input type="checkbox" value="memmove" /> memmove</label
+              ><label><input type="checkbox" value="memcpy" /> memcpy</label
+              ><label><input type="checkbox" value="memset" /> memset</label>
+            </div>
+            <p class="small muted">
+              These bounded memory models must be declared if the extracted
+              function calls them.
+            </p>
+            <details class="advanced">
+              <summary>
+                Advanced contract JSON <span>EDIT / APPLY</span>
+              </summary>
+              <label class="sr-only" for="contract-json"
+                >Calling contract JSON</label
+              ><textarea
+                id="contract-json"
+                class="code-input"
+                rows="12"
+                spellcheck="false"
+              ></textarea
+              ><button id="apply-contract" class="secondary">
+                Apply JSON contract
+              </button>
+            </details>
+          </section>
+          <section
+            id="evidence-panel"
+            role="tabpanel"
+            aria-labelledby="evidence-tab"
+            hidden
+          >
+            <div class="section-title">
+              <h3>Dependency closure</h3>
+              <span class="micro">EXTRACTION EVIDENCE</span>
+            </div>
+            <div id="dependency-view"></div>
+            <div class="section-title">
+              <h3>Memory layout</h3>
+              <span class="micro">ORIGINAL ARTIFACT ADDRESSES</span>
+            </div>
+            <div id="memory-map"></div>
+            <div class="section-title">
+              <h3>Original instruction bytes</h3>
+              <label class="sr-only" for="chunk-select"
+                >Select capsule chunk</label
+              ><select id="chunk-select"></select>
+            </div>
+            <div id="chunk-view" class="chunk-view"></div>
+            <details class="advanced">
+              <summary>Extraction provenance <span>RAW METADATA</span></summary>
+              <pre id="provenance"></pre>
+            </details>
+          </section>
+        </div>
+      </section>
+      <section class="execution-pane" aria-label="Execution and trace">
+        <div class="pane-heading">
+          <h2>Execution</h2>
+          <span class="micro">03 / OBSERVE</span>
+        </div>
+        <div class="execution-controls">
+          <div class="section-title">
+            <h3>Execution budgets</h3>
+            <span class="micro">BOUNDED</span>
+          </div>
+          <div class="budget-grid">
+            <label
+              >Instructions<input
+                id="instruction-limit"
+                type="number"
+                value="1000000"
+                min="1"
+                max="10000000" /></label
+            ><label
+              >Trace events<input
+                id="trace-limit"
+                type="number"
+                value="10000"
+                min="0"
+                max="200000" /></label
+            ><label
+              >Host timeout · ms<input
+                id="timeout"
+                type="number"
+                value="5000"
+                min="1"
+                max="60000"
+            /></label>
+          </div>
+          <div class="run-buttons">
+            <button id="run" class="run-button" disabled>
+              <span>▶</span> Run capsule</button
+            ><button id="cancel" class="secondary" disabled>Cancel</button>
+          </div>
+          <div
+            id="execution-status"
+            class="execution-status"
+            role="status"
+            aria-live="polite"
+          >
+            <span class="status-dot neutral"></span> No execution yet
+          </div>
+        </div>
+        <div id="run-error" class="run-error" role="alert" hidden></div>
+        <div id="results-empty" class="results-empty">
+          <div class="signal-line" aria-hidden="true">
+            · · · · · · · · · · · ·
+          </div>
+          <p>Execution evidence will appear here.</p>
+          <span>Return value · output bytes · bounded trace</span>
+        </div>
+        <div id="results" hidden>
+          <div class="return-display">
+            <span class="micro">RETURN / <span id="result-type">i32</span></span
+            ><strong id="return-value"></strong
+            ><span id="return-interpretation" class="small muted"></span>
+          </div>
+          <div id="stats" class="stats"></div>
+          <div class="section-title output-heading">
+            <h3>Output buffers</h3>
+          </div>
+          <div id="outputs"></div>
+          <div class="section-title">
+            <h3>Bounded event trace</h3>
+            <span id="trace-count" class="count"></span>
+          </div>
+          <label class="trace-filter-label"
+            ><span>Show</span
+            ><select id="trace-filter">
+              <option value="all">All events</option>
+              <option value="instruction">Instructions</option>
+              <option value="read">Memory reads</option>
+              <option value="write">Memory writes</option>
+            </select></label
+          >
+          <div id="trace-list" class="trace-list"></div>
+          <div id="trace-detail" class="trace-detail"></div>
+        </div>
+        <div class="export-section">
+          <button id="export" class="secondary full" disabled>
+            Export portable capsule <span>↓ ZIP</span>
+          </button>
+          <p class="small muted">
+            Includes the capsule, inputs, runtime and licenses. No original
+            artifact is required to run the export.
+          </p>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <span
+        >CAPSULITH <span class="footer-divider">/</span> Original bytes.
+        Explicit boundaries.</span
+      ><span>Local extraction · Worker execution · GPL-2.0-only</span>
+    </footer>
+  </body>
+</html>

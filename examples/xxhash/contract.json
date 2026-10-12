@@ -1,0 +1,26 @@
+{
+  "buffers": [
+    {
+      "name": "input",
+      "access": "read",
+      "capacity": 8192
+    }
+  ],
+  "args": [
+    {
+      "kind": "buffer",
+      "buffer": "input"
+    },
+    {
+      "kind": "length",
+      "buffer": "input"
+    },
+    {
+      "kind": "scalar",
+      "name": "seed",
+      "type": "u32"
+    }
+  ],
+  "return": "u32",
+  "imports": []
+}

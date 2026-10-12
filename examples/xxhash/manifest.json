@@ -1,0 +1,94 @@
+{
+  "project": "xxHash",
+  "repository": "https://github.com/Cyan4973/xxHash",
+  "tag": "v0.8.3",
+  "license": "BSD-2-Clause",
+  "sourceURLs": {
+    "xxhash.c": "https://raw.githubusercontent.com/Cyan4973/xxHash/v0.8.3/xxhash.c",
+    "xxhash.h": "https://raw.githubusercontent.com/Cyan4973/xxHash/v0.8.3/xxhash.h",
+    "LICENSE": "https://raw.githubusercontent.com/Cyan4973/xxHash/v0.8.3/LICENSE"
+  },
+  "sourceModified": false,
+  "buildCommands": {
+    "o2": "clang -arch arm64 -O2 -dynamiclib xxhash.c -o libxxhash-o2.dylib",
+    "o1": "clang -arch arm64 -O1 -dynamiclib xxhash.c -o libxxhash-o1.dylib"
+  },
+  "compiler": "Apple clang version 21.0.0 (clang-2100.3.34.2)\nTarget: arm64-apple-darwin25.6.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin\n",
+  "nativePlatform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "files": {
+    "LICENSE": {
+      "bytes": 1389,
+      "sha256": "6ffedbc0f7878612d2b23589f1ff2ab15633e1df7963a5d9fc750ec5500c7e7a"
+    },
+    "README.md": {
+      "bytes": 3182,
+      "sha256": "f162c5dbe0568a3cd341a2fe31e2800b98e89cf6896251d1432f07197e36f5c4"
+    },
+    "build-native-oracle.py": {
+      "bytes": 2924,
+      "sha256": "a91ea57951156499cd1c9f22aba0d248a7691fe8fcf4283625a124f865ffcb28"
+    },
+    "check-node.cjs": {
+      "bytes": 2522,
+      "sha256": "1da63e3ce952235f54468e3c0a0fd9c5f20149af78a9fd2e3b8a1bf82d4b2155"
+    },
+    "contract.json": {
+      "bytes": 358,
+      "sha256": "12b24c597f20a32cacf08d235ceda4ded235c518e70eade14b0a473e5e97925f"
+    },
+    "expected.json": {
+      "bytes": 48,
+      "sha256": "e004c2af66c937ace31329825bb2952bea3879499ae59dd74fb115d24f2b1859"
+    },
+    "input.json": {
+      "bytes": 105,
+      "sha256": "91c8323416008964fec10a7bdf2f18c5ccaa07c66ea9f877e7c7a56f22055151"
+    },
+    "libxxhash-o1.dylib": {
+      "bytes": 53296,
+      "sha256": "f709fd946bf7934911783397611cc48d71029b4b1584f8a6c0efc2161c532174"
+    },
+    "libxxhash-o2.dylib": {
+      "bytes": 53328,
+      "sha256": "2650dc4e7026897efebb9445529958f373420faa8b8d37613d09eb2728a7d3b8"
+    },
+    "oracle.json": {
+      "bytes": 592440,
+      "sha256": "d3bf7ada880fb84f57d5fa5728ae40c138c0d74682be95e8470e370ae54542e2"
+    },
+    "verification.json": {
+      "bytes": 3630,
+      "sha256": "83c1e2f9e8877db93abd7fc0bf6828a8a55056709ed9cfeb37780acb0b086f49"
+    },
+    "xxh32-o1.capsule.json": {
+      "bytes": 15185,
+      "sha256": "407d667c510b5c80b364df4ce2f0e4086a7529ffe2de6b163713c7f414a80604"
+    },
+    "xxh32-o2.capsule.json": {
+      "bytes": 16877,
+      "sha256": "9576184021dd11807fe5cc80d523262cc45613d2ecddc39c60b8983fe4f44ada"
+    },
+    "xxhash.c": {
+      "bytes": 1855,
+      "sha256": "5c3591fe6e6c86a619eb26760e9520e37a6fd5152882ab5ad93f912e2a855966"
+    },
+    "xxhash.h": {
+      "bytes": 268319,
+      "sha256": "17973c0dc49d9854ca26caa191f0e12f7a424b68858d9a78de3860d959d85e4b"
+    }
+  },
+  "sourceCommit": "e626a72bc2321cd320e953a0ccf1584cad60f363",
+  "oracleSchema": {
+    "vectors": "literal inputHex plus byte length",
+    "cases": "vector ID, seedU32, nativePointerModulo16, returnU32"
+  },
+  "verification": {
+    "nativeCases": 2200,
+    "nativeCalls": 4400,
+    "scratchUnicornExecutions": 4400,
+    "productionNodeWorkerExecutions": 1100,
+    "freshNativeRebuildCases": 2200,
+    "freshNativeRebuildCalls": 4400,
+    "productionNodePointerAlignment": "aligned; native cases independently cover four pointer offsets"
+  }
+}

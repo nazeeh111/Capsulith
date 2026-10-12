@@ -1,0 +1,12 @@
+{
+  "name": "capsulith-runtime",
+  "version": "0.1.0",
+  "private": true,
+  "type": "commonjs",
+  "main": "index.cjs",
+  "exports": {
+    ".": { "browser": "./browser.mjs", "default": "./index.cjs" },
+    "./browser": "./browser.mjs"
+  },
+  "license": "GPL-2.0-only"
+}

@@ -1,0 +1,46 @@
+{
+  "upstream": "https://github.com/lz4/lz4/tree/v1.10.0",
+  "sourceUse": "Original upstream fixture, public ABI caller-declared. Source not read by extraction.",
+  "files": [
+    {
+      "path": "LICENSE",
+      "sha256": "8b58c446121a109ccf32edc094bba3010a3d85e4ee3702950db55e4d3e87736c",
+      "bytes": 1311
+    },
+    {
+      "path": "capsule.json",
+      "sha256": "2b58ab55c20e8aae79a4feceee3563f437ea779f467deabc140c3a129c2bf1a0",
+      "bytes": 121697
+    },
+    {
+      "path": "contract.json",
+      "sha256": "2da39fe5a17964c243c3cadb5fcbbc59abbc3e2e0c7ad312af71f2b64e89a3cb",
+      "bytes": 551
+    },
+    {
+      "path": "liblz4-stripped.dylib",
+      "sha256": "063af738947db6db05eaeaa0a98330d57757983055e9e78d1f043e7951ddc884",
+      "bytes": 102872
+    },
+    {
+      "path": "liblz4.dylib",
+      "sha256": "a0f6e2fce554ce1c4e1cdd2006049fddbeaf268e4262ea68c37e046f910adcbd",
+      "bytes": 105648
+    },
+    {
+      "path": "lz4.c",
+      "sha256": "9396f7de527bc8435de9c7569fb7998e56545a84b4f3c2d808c0235c01774539",
+      "bytes": 118145
+    },
+    {
+      "path": "lz4.h",
+      "sha256": "26b82efc53d1570f3b54eef02e9c4764c1ad374ff03cac04e2ced5ea4d4c552f",
+      "bytes": 46014
+    },
+    {
+      "path": "native-oracle.json",
+      "sha256": "dd6333b483cb3849dff2efcd38699e11cc98469409d572d253a22732cfc34788",
+      "bytes": 455336
+    }
+  ]
+}

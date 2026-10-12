@@ -1,0 +1,39 @@
+name: Release gates
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  verify:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            python: '3.10'
+            node: '20'
+          - os: ubuntu-latest
+            python: '3.14'
+            node: '24'
+          - os: macos-latest
+            python: '3.14'
+            node: '24'
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: python -m pip install . wheel
+      - run: python -m unittest discover -s tests
+      - run: node --test tests/runtime.test.cjs
+      - run: node examples/xxhash/check-node.cjs
+      - name: Build wheel and verify isolated installed delivery
+        run: |
+          python -m pip wheel . --no-deps -w dist
+          python tools/check-installed.py
+      - name: Native independent rebuild
+        if: runner.os == 'macOS'
+        run: python examples/xxhash/build-native-oracle.py "$RUNNER_TEMP/capsulith-native-controls"

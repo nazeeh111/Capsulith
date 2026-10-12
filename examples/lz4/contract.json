@@ -1,0 +1,37 @@
+{
+  "buffers": [
+    {
+      "name": "source",
+      "access": "read",
+      "capacity": 65536
+    },
+    {
+      "name": "destination",
+      "access": "readwrite",
+      "capacity": 65536
+    }
+  ],
+  "args": [
+    {
+      "kind": "buffer",
+      "buffer": "source"
+    },
+    {
+      "kind": "buffer",
+      "buffer": "destination"
+    },
+    {
+      "kind": "length",
+      "buffer": "source"
+    },
+    {
+      "kind": "scalar",
+      "name": "outputCapacity",
+      "type": "i32"
+    }
+  ],
+  "return": "i32",
+  "imports": [
+    "memmove"
+  ]
+}
