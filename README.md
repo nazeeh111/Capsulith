@@ -19,7 +19,7 @@ Try the [keyless browser object demo](https://nazeeh111.github.io/Capsulith/) an
 Download the Python wheel from the [release](https://github.com/nazeeh111/Capsulith/releases/latest), then:
 
 ```sh
-python3 -m pip install capsulith-0.2.0-py3-none-any.whl
+python3 -m pip install capsulith-0.3.0-py3-none-any.whl
 capsulith studio
 ```
 
