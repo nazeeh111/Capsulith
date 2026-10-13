@@ -21,3 +21,7 @@ Unmodified LZ4 v1.10.0 sources and BSD-2-Clause license are in `examples/lz4/`; 
 Portable exports include the complete specimen notices under `licenses/lz4-BSD-2-Clause.txt` and `licenses/xxhash-BSD-2-Clause.txt`, alongside the GPL/backend notices. The package and source repository also retain them in the examples directories.
 
 A user's selected binary and its extracted bytes may have separate licensing terms. Capsule extraction and export do not grant redistribution rights.
+
+## QOI image specimen
+
+QOI is Dominic Szablewski's MIT-licensed image codec, not a Capsulith algorithm. Unmodified `qoi.h` from commit ffb2d2cb74a1de60819b21b939f7209aa53e91c1, its license, exact compiled specimen, explicit caller contracts and controlled native/FFmpeg evidence are in `examples/qoi/`. `component.c` enables the upstream no-stdio implementation and adds a clearly identified free adapter. The prepared specimen uses Apple Clang ARM64 -O1 with stack guards disabled to fit the declared memory-import scope; extraction reads its compiled bytes without consulting the source. The workbench and its portable ZIP retain original QOI source and notices. This is component preservation, not the invention of QOI or an endorsement by its author.
