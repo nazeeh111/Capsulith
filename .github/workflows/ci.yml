@@ -39,3 +39,4 @@ jobs:
         run: |
           python examples/xxhash/build-native-oracle.py "$RUNNER_TEMP/capsulith-native-controls"
           python examples/native-objects/build-native-oracle.py "$RUNNER_TEMP/capsulith-native-object-controls"
+          python examples/qoi/build-native-oracle.py "$RUNNER_TEMP/capsulith-native-image-controls" --native-only

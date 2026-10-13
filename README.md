@@ -1,12 +1,18 @@
 # Capsulith
 
-**Preserve compiled native functions and initialized objects as portable machine code.** Keep their original ARM64 instructions, declare the calling contracts, and run selected methods from Node or a browser without the original application. Version 0.2 adds an owned heap, explicit region lifetimes and checkpoints that resume in a fresh worker.
+**Preserve compiled native functions and initialized objects as portable machine code.** Keep their original ARM64 instructions, declare the calling contracts, and run selected methods from Node or a browser without the original application. Owned heaps, explicit region lifetimes and checkpoints resume in a fresh worker.
 
 A legacy decoder, checksum or isolated binary routine can become a small reusable API. Capsulith shows which bytes and dependencies travel with it, where execution reads and writes, and why a feature cannot be extracted when it requires unsupported state.
 
 ![Original LZ4 methods, restored dictionary access and exact native comparison in the object Studio](docs/objects-studio.png)
 
 ## Try it
+
+**[Open the native image workbench](https://nazeeh111.github.io/Capsulith/studio/image.html).** Bring a small PNG or QOI image. The extracted original QOI encoder writes a file, a separate native decoder returns its pixels, and you can inspect individual RGBA bytes. Preserve that initialized pixel allocation, close the worker, then restore and free it in a fresh one. No account, upload server, original binary or compiler is needed to run the public workbench.
+
+PNG uses browser-decoded RGBA as the explicit comparison baseline; QOI-only input has no independent source-pixel comparison. Images are bounded to 256 pixels per dimension and 1 MiB. This is a known-source prepared native component demonstration, not a new codec or universal format recovery. [Original QOI source, contracts, independent native/FFmpeg controls and standalone Node commands](examples/qoi/README.md).
+
+![Actual browser-imported PNG, compiled QOI round trip and restored native pixel heap](docs/image-workbench.jpg)
 
 Try the [keyless browser object demo](https://nazeeh111.github.io/Capsulith/) and press **Run lifecycle**. It executes the actual extracted instructions locally; it does not call a server to generate results.
 

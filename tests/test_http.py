@@ -3,7 +3,9 @@ import http.client
 import json
 import threading
 import unittest
-from capsulith.server import Handler, StudioServer, ANALYSIS_SLOTS
+
+from capsulith.resources import resource_root
+from capsulith.server import ANALYSIS_SLOTS, Handler, StudioServer
 
 
 class HTTPTests(unittest.TestCase):
@@ -75,3 +77,32 @@ class HTTPTests(unittest.TestCase):
         finally:
             ANALYSIS_SLOTS.release()
             ANALYSIS_SLOTS.release()
+
+    def test_image_journey_assets_match_installed_files_and_preserve_route_bounds(self):
+        for name in (
+            "studio/image.html",
+            "studio/image-codec.mjs",
+            "studio/image-codec-core.mjs",
+            "examples/qoi/module.json",
+            "examples/qoi/orbit.qoi",
+            "examples/qoi/orbit.png",
+            "THIRD_PARTY_NOTICES.md",
+            "LICENSE",
+        ):
+            status, data = self.request("/" + name)
+            self.assertEqual(status, 200, name)
+            self.assertEqual(data, (resource_root() / name).read_bytes())
+        self.assertEqual(self.request("/examples/qoi/libqoi.dylib")[0], 404)
+        self.assertEqual(self.request("/examples/qoi/../../pyproject.toml")[0], 404)
+        self.assertEqual(
+            self.request(
+                "/examples/qoi/module.json", headers={"Host": "foreign.example"}
+            )[0],
+            403,
+        )
+        self.assertEqual(
+            self.request(
+                "/examples/qoi/orbit.qoi", headers={"Origin": "https://foreign.example"}
+            )[0],
+            403,
+        )

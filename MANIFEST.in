@@ -3,7 +3,7 @@ recursive-include studio *
 recursive-include examples *
 recursive-include tests *.py *.cjs *.mjs *.json
 recursive-include tools *.py
-recursive-include docs *.png
+recursive-include docs *.png *.jpg
 recursive-include .github *.yml
 include CHANGELOG.md CONTRIBUTING.md SECURITY.md
 include LICENSE THIRD_PARTY_NOTICES.md

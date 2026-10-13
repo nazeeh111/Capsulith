@@ -1,0 +1,5 @@
+{
+  "encode": {"root":"_qoi_encode", "args":["reference","reference","reference"], "return":"reference"},
+  "decode": {"root":"_qoi_decode", "args":["reference","i32","reference","i32"], "return":"reference"},
+  "free": {"root":"_capsulith_qoi_free", "args":["reference"], "return":"u32"}
+}

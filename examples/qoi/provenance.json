@@ -1,0 +1,83 @@
+{
+  "upstream": "https://github.com/phoboslab/qoi/tree/ffb2d2cb74a1de60819b21b939f7209aa53e91c1",
+  "sourceSHA256": "7de6fca1a285b1c20d38f2723dec8b774eb9f144edb9710800a95feeea09375a",
+  "artifactSHA256": "9616a6a8ece0b65b8dfc518f71b92d400fb1809c5af58c7dfc2d810d422bfa01",
+  "moduleId": "8d1ef8ac972d605734f5a9c8e6f3c02cdc4b70197dca3d0c3ddfefc36dd26788",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+  "command": [
+    "clang",
+    "-arch",
+    "arm64",
+    "-O1",
+    "-fno-stack-protector",
+    "-dynamiclib",
+    "-o",
+    "libqoi.dylib",
+    "component.c"
+  ],
+  "sourceUse": "Unchanged upstream no-stdio codec; explicit free adapter. Extraction reads compiled bytes only. Synthetic original artwork, not hardware data.",
+  "nativeControlCases": 8,
+  "ffmpegControlCases": 8,
+  "files": [
+    {
+      "path": "LICENSE.qoi",
+      "bytes": 1075,
+      "sha256": "0caf25d92ae0e7e12107e144a86782ccaad37ddaa3ee51e86e193c7db9ed1487"
+    },
+    {
+      "path": "README.md",
+      "bytes": 4418,
+      "sha256": "a483ce5c657631869c742676a24f2dc886e5911fe78ed0cf6197d79dafc80841"
+    },
+    {
+      "path": "build-native-oracle.py",
+      "bytes": 8847,
+      "sha256": "6e36a2c506cf022a00a89f5339facdf34c9f0c5806f13afe375bc104e002ecd7"
+    },
+    {
+      "path": "component.c",
+      "bytes": 259,
+      "sha256": "50158f8102d08bd187c1d7faafc1b9ddd28a0e18bdf6c422103ecb965e26fc7e"
+    },
+    {
+      "path": "libqoi.dylib",
+      "bytes": 33520,
+      "sha256": "9616a6a8ece0b65b8dfc518f71b92d400fb1809c5af58c7dfc2d810d422bfa01"
+    },
+    {
+      "path": "methods.json",
+      "bytes": 291,
+      "sha256": "f532ca5979cd1c26313045757c242ea55e43bd3490abb182d5582d5f6ddb092e"
+    },
+    {
+      "path": "module.json",
+      "bytes": 77573,
+      "sha256": "585f345694be9b6601027f133dd79d0bc7c37a6f0af312b3df2a359b888e4192"
+    },
+    {
+      "path": "native-oracle.json",
+      "bytes": 1047711,
+      "sha256": "0b41559bd4cb5d43defe8a3e344f0413acc275c5229455689d9028fe8cc8364b"
+    },
+    {
+      "path": "orbit.png",
+      "bytes": 39616,
+      "sha256": "c20590da63f5a21f6eda7211708b6299899315e17fd813ac6304ff5f159f87f8"
+    },
+    {
+      "path": "orbit.qoi",
+      "bytes": 44561,
+      "sha256": "189ddf13f5c1692cb24399c4270de9e61702d53e3d7fe1bdcc91d4ed47fabf8d"
+    },
+    {
+      "path": "qoi.h",
+      "bytes": 18326,
+      "sha256": "7de6fca1a285b1c20d38f2723dec8b774eb9f144edb9710800a95feeea09375a"
+    },
+    {
+      "path": "run.cjs",
+      "bytes": 2469,
+      "sha256": "85d5253f5d11be5ed324f9a27113a2ba6cf77db345165eac7fc82809341d7ec4"
+    }
+  ]
+}

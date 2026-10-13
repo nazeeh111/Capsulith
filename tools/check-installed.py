@@ -206,6 +206,21 @@ with tempfile.TemporaryDirectory(prefix="capsulith-installed-") as directory:
                 asset_files += 1
     for name in ("LICENSE", "THIRD_PARTY_NOTICES.md"):
         assert (resources / name).read_bytes() == (ROOT / name).read_bytes()
+    image_runner = resources / "examples/qoi/run.cjs"
+    image = run(
+        [NODE, str(image_runner), "decode", str(resources / "examples/qoi/orbit.qoi"),
+         "--out", "native-image.rgba", "--preserve", "native-image.json"],
+        root, output=True,
+    )
+    restored_image = run(
+        [NODE, str(image_runner), "restore", "native-image.json", "--out", "restored-image.rgba"],
+        root, output=True,
+    )
+    image_oracle = json.loads((resources / "examples/qoi/native-oracle.json").read_text())
+    orbit = next(case for case in image_oracle["cases"] if case["name"] == "orbit")
+    assert sha((root / "native-image.rgba").read_bytes()) == orbit["rgbaSHA256"]
+    assert (root / "restored-image.rgba").read_bytes() == (root / "native-image.rgba").read_bytes()
+    assert image["instanceId"] != restored_image["instanceId"] and restored_image["freed"]
     function_files = extract_new(root / "function.zip", root / "function")
     function = run([NODE, "run.cjs"], root / "function", output=True)
     expected = json.loads((resources / "examples/xxhash/expected.json").read_text())
