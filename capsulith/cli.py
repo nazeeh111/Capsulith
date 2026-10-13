@@ -2,13 +2,27 @@
 import argparse
 import base64
 import json
-from pathlib import Path
 import shutil
 import subprocess
 import sys
-from .server import analyze, serve
+from pathlib import Path
+
 from .export import export_zip
 from .resources import resource_root
+from .server import analyze, serve
+
+
+def _read_object_json(path):
+    with path.open("rb") as source:
+        raw = source.read(64 * 1024 * 1024 + 1)
+    if len(raw) > 64 * 1024 * 1024:
+        raise ValueError("Object JSON exceeds 64 MiB")
+    return json.loads(raw)
+
+
+def _write_new(path, data):
+    with path.open("xb") as destination:
+        destination.write(data)
 
 
 def main():
@@ -27,6 +41,12 @@ def main():
     extract.add_argument("--root", required=True)
     extract.add_argument("--contract", type=Path)
     extract.add_argument("--out", required=True, type=Path)
+    module = commands.add_parser(
+        "module", help="Extract named native methods with explicit caller contracts"
+    )
+    module.add_argument("artifact", type=Path)
+    module.add_argument("--methods", required=True, type=Path)
+    module.add_argument("--out", required=True, type=Path)
     studio = commands.add_parser(
         "studio", help="Open the local upload/extract/execute studio"
     )
@@ -44,9 +64,15 @@ def main():
     export.add_argument("capsule", type=Path)
     export.add_argument("--inputs", required=True, type=Path)
     export.add_argument("--out", required=True, type=Path)
+    export_module = commands.add_parser(
+        "export-module", help="Export a portable native object and optional checkpoint"
+    )
+    export_module.add_argument("module", type=Path)
+    export_module.add_argument("--checkpoint", type=Path)
+    export_module.add_argument("--out", required=True, type=Path)
     args = parser.parse_args()
     try:
-        if args.command in ("inspect", "extract"):
+        if args.command in ("inspect", "extract", "module"):
             if args.artifact.stat().st_size > 32 * 1024 * 1024:
                 raise ValueError("Artifact exceeds 32 MiB")
             request = {
@@ -55,9 +81,14 @@ def main():
             }
             if args.command == "extract":
                 request["root"] = args.root
+            elif args.command == "module":
+                request["methods"] = _read_object_json(args.methods)
             result = analyze(request)
             if args.command == "inspect":
                 print(json.dumps(result, indent=2))
+            elif args.command == "module":
+                _write_new(args.out, (json.dumps(result, indent=2) + "\n").encode())
+                print(f"Extracted {len(result['entries'])} methods into {args.out}")
             else:
                 if args.contract:
                     result["contract"] = json.loads(args.contract.read_text())
@@ -74,6 +105,15 @@ def main():
             )
             args.out.write_bytes(data)
             print(f"Portable export: {args.out} ({len(data)} bytes)")
+        elif args.command == "export-module":
+            from .object_export import export_module_zip
+
+            data = export_module_zip(
+                _read_object_json(args.module),
+                _read_object_json(args.checkpoint) if args.checkpoint else None,
+            )
+            _write_new(args.out, data)
+            print(f"Portable object export: {args.out} ({len(data)} bytes)")
         elif args.command == "run":
             node = shutil.which(args.node)
             if not node:
@@ -90,6 +130,7 @@ def main():
                     str(args.trace_limit),
                 ],
                 timeout=65,
+                check=False,
             ).returncode
     except (OSError, ValueError, subprocess.TimeoutExpired) as error:
         print(f"capsulith: {error}", file=sys.stderr)

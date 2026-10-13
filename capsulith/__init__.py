@@ -3,6 +3,7 @@
 
 from .artifact import ArtifactError, inspect_artifact
 from .extract import extract_capsule
+from .module import extract_module
 
-__version__ = "0.1.0"
-__all__ = ["ArtifactError", "inspect_artifact", "extract_capsule"]
+__version__ = "0.2.0"
+__all__ = ["ArtifactError", "extract_capsule", "extract_module", "inspect_artifact"]
