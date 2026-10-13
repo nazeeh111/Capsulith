@@ -7,3 +7,5 @@ recursive-include docs *.png
 recursive-include .github *.yml
 include CHANGELOG.md CONTRIBUTING.md SECURITY.md
 include LICENSE THIRD_PARTY_NOTICES.md
+global-exclude *.pyc *.pyo
+prune examples/native-objects/__pycache__
