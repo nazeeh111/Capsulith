@@ -1,0 +1,35 @@
+{
+  "compress": {
+    "root": "_LZ4_compress_fast_continue",
+    "args": [
+      "reference",
+      "reference",
+      "reference",
+      "i32",
+      "i32",
+      "i32"
+    ],
+    "return": "i32"
+  },
+  "create": {
+    "root": "_LZ4_createStream",
+    "args": [],
+    "return": "reference"
+  },
+  "free": {
+    "root": "_LZ4_freeStream",
+    "args": [
+      "reference"
+    ],
+    "return": "i32"
+  },
+  "save": {
+    "root": "_LZ4_saveDict",
+    "args": [
+      "reference",
+      "reference",
+      "i32"
+    ],
+    "return": "i32"
+  }
+}

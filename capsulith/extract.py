@@ -2,18 +2,21 @@
 """Extract closed direct-control-flow native features without loading their image."""
 
 from __future__ import annotations
-from capstone import Cs, CS_ARCH_ARM64, CS_MODE_ARM
+
+from capstone import CS_ARCH_ARM64, CS_MODE_ARM, Cs
 from capstone.arm64_const import ARM64_OP_IMM, ARM64_OP_MEM, ARM64_OP_REG
+
 from .artifact import (
-    ArtifactError,
     MAX_CODE,
     MAX_READONLY,
     MAX_SPAN,
+    ArtifactError,
     parse_artifact,
     require,
 )
 
 ALLOWED_IMPORTS = frozenset(("_memcpy", "_memmove", "_memset"))
+OBJECT_IMPORTS = ALLOWED_IMPORTS | frozenset(("_malloc", "_bzero", "_free"))
 DATA_SECTIONS = frozenset(("__const", "__cstring"))
 
 
@@ -174,6 +177,15 @@ def _can_fall_through(function, instructions):
 
 
 def extract_capsule(blob: bytes, root) -> dict:
+    return _extract_capsule(blob, root, ALLOWED_IMPORTS)
+
+
+def _extract_capsule(blob: bytes, root, allowed_imports) -> dict:
+    """Internal extension for explicitly modeled object-memory imports only."""
+    require(
+        isinstance(allowed_imports, frozenset) and allowed_imports <= OBJECT_IMPORTS,
+        "extraction import models must be known explicit memory operations",
+    )
     image = parse_artifact(blob)
     require(
         image.base == 0, "nonzero preferred image bases are unsupported in this release"
@@ -289,7 +301,7 @@ def extract_capsule(blob: bytes, root) -> dict:
                 if target in image.imports:
                     name = image.imports[target]
                     require(
-                        name in ALLOWED_IMPORTS,
+                        name in allowed_imports,
                         f"unsupported import {name} called at 0x{instruction.address:x}",
                     )
                     imports[target] = name

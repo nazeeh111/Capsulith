@@ -4,8 +4,10 @@
 import base64
 import json
 import sys
+
 from .artifact import inspect_artifact
 from .extract import extract_capsule
+from .module import extract_module
 
 
 def main():
@@ -31,13 +33,15 @@ def main():
             result = inspect_artifact(artifact)
         elif request["action"] == "extract":
             result = extract_capsule(artifact, request["root"])
+        elif request["action"] == "module":
+            result = extract_module(artifact, request["methods"])
         else:
             raise ValueError("Unsupported operation")
         encoded = json.dumps({"ok": True, "result": result}, separators=(",", ":"))
         if len(encoded.encode()) > 64 * 1024 * 1024:
             raise ValueError("Analysis response exceeds 64 MiB")
         print(encoded)
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001 - subprocess errors require a JSON envelope
         print(
             json.dumps(
                 {

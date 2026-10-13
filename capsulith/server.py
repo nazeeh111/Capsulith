@@ -5,15 +5,16 @@ import json
 import mimetypes
 import subprocess
 import sys
-import threading
 import tempfile
+import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from pathlib import Path
-from urllib.parse import urlsplit, unquote
-from .resources import resource_root
+from urllib.parse import unquote, urlsplit
+
 from .export import export_zip
+from .resources import resource_root
 
 MAX_BODY = 48 * 1024 * 1024
+MAX_OBJECT_EXPORT_BODY = 96 * 1024 * 1024
 ANALYSIS_SLOTS = threading.BoundedSemaphore(2)
 
 
@@ -25,12 +26,13 @@ def analyze(request):
     ):
         input_file.write(json.dumps(request).encode())
         input_file.seek(0)
-        completed = subprocess.run(
+        subprocess.run(
             [sys.executable, "-m", "capsulith.worker"],
             stdin=input_file,
             stdout=output_file,
             stderr=subprocess.DEVNULL,
             timeout=20,
+            check=False,
         )
         output_file.seek(0)
         raw = output_file.read(64 * 1024 * 1024 + 1)
@@ -78,7 +80,7 @@ class StudioServer(ThreadingHTTPServer):
 
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = "Capsulith/0.1"
+    server_version = "Capsulith/0.2"
 
     def setup(self):
         super().setup()
@@ -101,8 +103,9 @@ class Handler(BaseHTTPRequestHandler):
             "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'",
         )
         if download:
+            filename = download if isinstance(download, str) else "capsule-portable.zip"
             self.send_header(
-                "Content-Disposition", 'attachment; filename="capsule-portable.zip"'
+                "Content-Disposition", f'attachment; filename="{filename}"'
             )
         self.end_headers()
         self.wfile.write(body)
@@ -122,6 +125,13 @@ class Handler(BaseHTTPRequestHandler):
         root = resource_root()
         if path == "/api/examples":
             self.send(200, json.loads((root / "examples" / "studio.json").read_text()))
+            return
+        if path == "/api/object-example":
+            example = root / "examples" / "native-objects" / "studio.json"
+            if not example.is_file():
+                self.send(404, {"error": "Native object example is not installed"})
+                return
+            self.send(200, json.loads(example.read_text()))
             return
         if path == "/":
             target = root / "studio" / "index.html"
@@ -159,12 +169,23 @@ class Handler(BaseHTTPRequestHandler):
             return
         try:
             path = urlsplit(self.path).path
-            if path not in ("/api/inspect", "/api/extract", "/api/export"):
+            if path not in (
+                "/api/inspect",
+                "/api/extract",
+                "/api/export",
+                "/api/extract-module",
+                "/api/export-module",
+            ):
                 self.send(404, {"error": "Not found"})
                 return
             length = int(self.headers.get("Content-Length", "-1"))
-            if not 0 <= length <= MAX_BODY:
-                self.send(413, {"error": "Request exceeds 48 MiB"})
+            body_limit = (
+                MAX_OBJECT_EXPORT_BODY if path == "/api/export-module" else MAX_BODY
+            )
+            if not 0 <= length <= body_limit:
+                self.send(
+                    413, {"error": f"Request exceeds {body_limit // (1024 * 1024)} MiB"}
+                )
                 return
             if self.headers.get("Content-Type", "").split(";")[0] != "application/json":
                 self.send(415, {"error": "JSON content type required"})
@@ -174,12 +195,23 @@ class Handler(BaseHTTPRequestHandler):
                 raise ValueError("Incomplete request")
             request = json.loads(raw)
             if not isinstance(request, dict):
-                raise ValueError("Request must be an object")
+                raise TypeError("Request must be an object")
             if path == "/api/export":
                 data = export_zip(request["capsule"], request["inputs"])
                 self.send(200, data, "application/zip", download=True)
+            elif path == "/api/export-module":
+                from .object_export import export_module_zip
+
+                data = export_module_zip(request["module"], request.get("checkpoint"))
+                self.send(
+                    200, data, "application/zip", download="native-object-portable.zip"
+                )
             else:
-                request["action"] = "inspect" if path.endswith("inspect") else "extract"
+                request["action"] = {
+                    "/api/inspect": "inspect",
+                    "/api/extract": "extract",
+                    "/api/extract-module": "module",
+                }[path]
                 self.send(200, analyze(request))
         except subprocess.TimeoutExpired:
             self.send(422, {"error": "Analysis stopped at the 20-second limit"})

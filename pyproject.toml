@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "capsulith"
-version = "0.1.0"
-description = "Extract compiled ARM64 features into portable callable machine-code capsules"
+version = "0.2.0"
+description = "Preserve compiled ARM64 functions and initialized native objects as portable machine code"
 readme = "README.md"
 requires-python = ">=3.10"
 keywords = ["binary-analysis", "arm64", "mach-o", "webassembly", "emulation"]
