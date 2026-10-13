@@ -80,7 +80,7 @@ class StudioServer(ThreadingHTTPServer):
 
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = "Capsulith/0.2"
+    server_version = "Capsulith/0.3"
 
     def setup(self):
         super().setup()
@@ -135,6 +135,14 @@ class Handler(BaseHTTPRequestHandler):
             return
         if path == "/":
             target = root / "studio" / "index.html"
+        elif path in (
+            "/examples/qoi/module.json",
+            "/examples/qoi/orbit.qoi",
+            "/examples/qoi/orbit.png",
+            "/THIRD_PARTY_NOTICES.md",
+            "/LICENSE",
+        ):
+            target = root / path.lstrip("/")
         elif path.startswith(("/studio/", "/runtime/")):
             target = (root / path.lstrip("/")).resolve()
             if not target.is_relative_to(root.resolve()) or ".." in path.split("/"):
