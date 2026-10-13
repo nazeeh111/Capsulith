@@ -1,0 +1,6 @@
+{
+  "schema": "capsulith.portable.v1",
+  "moduleFile": "module.json",
+  "checkpointFile": null,
+  "exampleFile": "example.json"
+}
