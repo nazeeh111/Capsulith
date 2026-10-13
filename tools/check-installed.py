@@ -148,7 +148,7 @@ Path('object.zip').write_bytes(export_module_zip(json.loads(Path('module.json').
 """
 
 with tempfile.TemporaryDirectory(prefix="capsulith-installed-") as directory:
-    root = Path(directory)
+    root = Path(directory).resolve()
     environment = root / "env"
     run([sys.executable, "-m", "venv", str(environment)], root)
     python = environment / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
@@ -185,7 +185,11 @@ with tempfile.TemporaryDirectory(prefix="capsulith-installed-") as directory:
     installed = run(
         [str(python), "-c", PROBE, VERSION], root, output=True, environment=clean_env
     )
-    assert Path(installed["installedModule"]).is_relative_to(environment)
+    installed_module = Path(installed["installedModule"]).resolve()
+    assert installed_module.is_relative_to(environment.resolve()), {
+        "installedModule": str(installed_module),
+        "expectedEnvironment": str(environment.resolve()),
+    }
     resources = Path(installed["assetRoot"])
     asset_files = 0
     for folder in ("runtime", "studio", "examples"):
