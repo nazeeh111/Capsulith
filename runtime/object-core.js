@@ -200,9 +200,6 @@
   }
   function settings(options = {}) {
     obj(options, "options");
-    if (options.checkpoint === undefined)
-      return Object.freeze(baseSettings(options));
-    const captured = capturedLimits(options.checkpoint);
     const explicit =
       options.limits === undefined ? options : obj(options.limits, "limits");
     if (
@@ -211,6 +208,9 @@
     ) {
       fail("VALIDATION", "Unknown configured limit");
     }
+    if (options.checkpoint === undefined)
+      return Object.freeze(baseSettings(options));
+    const captured = capturedLimits(options.checkpoint);
     const merged = { ...captured };
     for (const k of LIMIT_KEYS) {
       if (!Object.hasOwn(explicit, k)) continue;
@@ -446,10 +446,7 @@
         fail("REFERENCE", "Returned pointer is not an exact guest address");
       const r = [...this.regions.values()].find(
         (r) =>
-          r.live &&
-          address >= r.address &&
-          (address < r.address + r.capacity ||
-            (r.capacity === 0 && address === r.address)),
+          r.live && address >= r.address && address <= r.address + r.capacity,
       );
       if (!r)
         fail("REFERENCE", "Returned pointer is outside live owned regions", {
@@ -1032,6 +1029,7 @@
         );
       }
       let byteTotal = 0;
+      const callerNames = new Set();
       for (const spec of cp.regions) {
         obj(spec, "checkpoint region");
         const fields = new Set([
@@ -1064,6 +1062,11 @@
         }
         validName(spec.id, "region id");
         validName(spec.name, "region name");
+        if (spec.kind === "buffer") {
+          if (callerNames.has(spec.name))
+            fail("VALIDATION", "Duplicate caller buffer name in checkpoint");
+          callerNames.add(spec.name);
+        }
         if (
           !["heap", "buffer"].includes(spec.kind) ||
           !["read", "write", "readwrite"].includes(spec.access)

@@ -127,3 +127,7 @@ corresponding backend source. The descriptor references module.json and
 checkpoint.json once, avoiding duplicate state bytes. Existing single-function
 endpoints and object extraction retain the 48 MiB request limit. Oversized inputs
 or exports are refused explicitly, with no truncation or overwritten output.
+
+The operation runner emits compact JSON and enforces its 64 MiB encoded-result
+budget before retaining each record. Exceeding it stops the program with
+`OUTPUT_LIMIT`, closes the instance, and writes no successful checkpoint.

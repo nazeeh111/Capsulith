@@ -5,7 +5,7 @@ const {createModule}=require('./objects.cjs');
 const MAX_JSON=64*1024*1024, MAX_OUTPUT=64*1024*1024;
 function read(file){if(fs.statSync(file).size>MAX_JSON)throw Error('JSON exceeds 64 MiB');return JSON.parse(fs.readFileSync(file,'utf8'));}
 function ownObject(value){return value!==null&&typeof value==='object'&&!Array.isArray(value);}
-async function main(argv,base=process.cwd(),output=value=>console.log(JSON.stringify(value,null,2))){
+async function main(argv,base=process.cwd(),output=value=>console.log(JSON.stringify(value))){
  const options={module:'module.json',program:'operations.json'};
  let position=false;
  for(let i=0;i<argv.length;i++){
@@ -28,6 +28,9 @@ async function main(argv,base=process.cwd(),output=value=>console.log(JSON.strin
  try{
   instance=await createModule(module,{...(program.limits===undefined?{}:{limits:program.limits}),...(options.checkpoint?{checkpoint:read(file(options.checkpoint))}:{}),signal:controller.signal});
   const aliases=new Map(),operations=[];
+  const resultDocument={schema:'capsulith.operations.result.v1',moduleId:module.id,instanceId:instance.instanceId,operations};
+  let outputBytes=Buffer.byteLength(JSON.stringify(resultDocument));
+  const outputLimit=()=>{const error=new Error('Result exceeds 64 MiB');error.code='OUTPUT_LIMIT';return error;};
   const argument=value=>{
    if(ownObject(value)&&Object.hasOwn(value,'use')){
     if(Object.keys(value).length!==1||typeof value.use!=='string'||!aliases.has(value.use))throw Error('Unknown result reference');
@@ -50,12 +53,16 @@ async function main(argv,base=process.cwd(),output=value=>console.log(JSON.strin
     result=await instance.call(op.method,op.args.map(argument),{traceLimit:0,...op.options,signal:controller.signal});value=result.returnValue;
    }else if(op.op==='read'){result=await instance.readBuffer(argument(op.reference),op.length);value=result;}
    else result=await instance.releaseBuffer(argument(op.reference));
+   const record={op:op.op,...(op.method?{method:op.method}:{}),...(op.as?{as:op.as}:{}),result:result??null};
+   const recordBytes=Buffer.byteLength(JSON.stringify(record))+(operations.length?1:0);
+   if(outputBytes+recordBytes>MAX_OUTPUT)throw outputLimit();
+   outputBytes+=recordBytes;
    if(op.as!==undefined)aliases.set(op.as,value);
-   operations.push({op:op.op,...(op.method?{method:op.method}:{}),...(op.as?{as:op.as}:{}),result:result??null});
+   operations.push(record);
   }
   if(controller.signal.aborted)throw Error('Program stopped at the 60-second limit');
-  const result={schema:'capsulith.operations.result.v1',moduleId:module.id,instanceId:instance.instanceId,operations};
-  if(Buffer.byteLength(JSON.stringify(result))>MAX_OUTPUT)throw Error('Result exceeds 64 MiB');
+  const result=resultDocument;
+  if(Buffer.byteLength(JSON.stringify(result))>MAX_OUTPUT)throw outputLimit();
   if(destination){
    const checkpoint=await instance.checkpoint();
    if(controller.signal.aborted)throw Error('Program stopped at the 60-second limit');

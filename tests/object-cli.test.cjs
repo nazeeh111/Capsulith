@@ -27,3 +27,12 @@ test('bad operation/refuse unknown variable never saves a successful checkpoint'
  fs.writeFileSync(path.join(dir,'empty.json'),JSON.stringify({schema:'capsulith.operations.v1',operations:[]}));
  await assert.rejects(main(['empty.json','--unknown'],dir,()=>{}),/Unknown option/);
 });
+test('result budget stops accumulated reads before later operations or checkpoint output',async()=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'capsulith-result-bound-'));
+ fs.writeFileSync(path.join(dir,'module.json'),JSON.stringify(moduleDocument));
+ const operations=[{op:'allocate',as:'data',spec:{name:'large',bytes:'',access:'readwrite',capacity:8*1024*1024}},...Array.from({length:5},()=>({op:'read',reference:{use:'data'},length:8*1024*1024})),{op:'must_not_be_reached'}];
+ fs.writeFileSync(path.join(dir,'large.json'),JSON.stringify({schema:'capsulith.operations.v1',operations}));
+ let published=false;
+ await assert.rejects(main(['large.json','--checkpoint-out','not-saved.json'],dir,()=>{published=true;}),error=>error.code==='OUTPUT_LIMIT');
+ assert.equal(published,false);assert.equal(fs.existsSync(path.join(dir,'not-saved.json')),false);
+});
