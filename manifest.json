@@ -292,20 +292,20 @@
     },
     {
       "path": "studio/image.css",
-      "bytes": 12845,
-      "sha256": "273028e91fa02e0b3b2be44179dbcc9fb946cdb0568e0525ad9f3e4af1fcc53b",
+      "bytes": 15955,
+      "sha256": "124384650e1fe4655aa71d08291118d8f8a51bb0af159765d92f04a8ae10eb66",
       "mode": 420
     },
     {
       "path": "studio/image.html",
-      "bytes": 8689,
-      "sha256": "4c700948f004fd4a1541f631720cf6906e6e2ccbdf6311fc963365e930e9ccdc",
+      "bytes": 9659,
+      "sha256": "f8e44f34d3cb3abe0dcbb17f854e82106a654782e972d0a40486db936aaa9129",
       "mode": 420
     },
     {
       "path": "studio/image.mjs",
-      "bytes": 22808,
-      "sha256": "f49252b380336a9755451567d02fc176cdc5d98465c5d359737be19906891f96",
+      "bytes": 25220,
+      "sha256": "50fa1752c6f301606a491a88dbe4fcc7230315ed758d2a606a62a9613512395c",
       "mode": 420
     },
     {
