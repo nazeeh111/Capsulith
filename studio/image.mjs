@@ -9,7 +9,22 @@ const node = (tag,text,className) => {const el=document.createElement(tag);if(te
 function status(message,state='idle'){ $('status-text').textContent=message;$('status').dataset.state=state; }
 function errorMessage(error){$('error').textContent=`${error.code ? error.code+': ' : ''}${error.message || error}`;$('error').hidden=false;}
 function clearError(){$('error').hidden=true;$('error').textContent='';}
+function imageView(which){
+  $('comparison-desk').dataset.view=which;
+  $('view-source').setAttribute('aria-pressed',String(which==='source'));
+  $('view-result').setAttribute('aria-pressed',String(which==='result'));
+}
+function lifecycle(restored=false){
+  const retained=!!result?.preserved;
+  $('life-decode').textContent=retained?'Decoder worker closed':'Decode an image';
+  $('life-retain').textContent=retained?'Pixel heap retained':'Retain its pixel heap';
+  $('life-restore').textContent=restored?'Fresh read · native free complete':'Reopen in a fresh worker';
+  $('life-decode').dataset.complete=String(retained);
+  $('life-retain').dataset.complete=String(retained);
+  $('life-restore').dataset.complete=String(restored);
+}
 function controls(){
+  $('view-result').disabled=!result;
   $('run').disabled=!!active || !input || input.kind==='state';
   $('run').textContent=input?.kind==='png'?'Encode & verify pixels →':'Decode original instructions →';
   $('cancel').disabled=!active;
@@ -30,9 +45,9 @@ function hideCanvas(id){$(id).hidden=true;$(id).width=1;$(id).height=1;$(id==='s
 function clearOutput(){
   result=null;hideCanvas('result-canvas');
   if(input?.kind!=='png'){hideCanvas('source-canvas');$('source-caption').textContent='Awaiting successful compiled decode or validated state restoration.';}
-  $('comparison').hidden=true;$('preserved-facts').hidden=true;$('restored-instance').textContent='Not restored';
-  $('preserve-status').textContent='A successful decode captures the pixel heap for this explicit recovery path.';
-  $('result-caption').textContent='Native output appears after execution.';$('result-format').textContent='RGBA / NATIVE';
+  $('comparison').hidden=true;$('preserved-details').hidden=true;$('preserved-details').open=false;$('preserved-facts').hidden=true;$('restored-instance').textContent='Not restored';
+  $('restore-brief').textContent='A successful decode preserves this image allocation.';$('preserve-status').textContent='A successful decode retains the native pixel allocation after its worker closes.';lifecycle();imageView('source');
+  $('result-title').textContent='Returned pixels';$('view-result').textContent='Returned pixels';$('result-caption').textContent='Native output appears after execution.';$('result-format').textContent='RGBA / NATIVE';
   $('output-size').textContent='No output bytes yet';$('evidence-summary').replaceChildren();$('evidence-empty').hidden=false;
   $('evidence-details').hidden=true;$('stats').textContent='';$('bytes-details').hidden=true;$('byte-preview').textContent='';
   renderPixel();controls();
@@ -40,15 +55,15 @@ function clearOutput(){
 function resetInput(){
   active?.controller.abort();active=null;revision++;input=null;clearOutput();hideCanvas('source-canvas');clearError();
   $('source-name').textContent='NO IMAGE SELECTED';$('source-size').textContent='PNG / QOI · ≤256 × 256 · ≤1 MiB';
-  $('source-title').textContent='Source image';$('source-format').textContent='WAITING';$('source-caption').textContent='No image has been decoded.';
+  $('source-title').textContent='Source image';$('view-source').textContent='Source';$('source-format').textContent='WAITING';$('source-caption').textContent='No image has been decoded.';
   selection={x:0,y:0};renderPixel();controls();
 }
-async function task(message,fn){
+async function task(message,fn,{retain=false}={}){
   active?.controller.abort();
-  const operation={ticket:++revision,controller:new AbortController()};active=operation;clearError();clearOutput();status(message,'busy');controls();
+  const operation={ticket:++revision,controller:new AbortController(),retain,hadPreserved:!!result?.preserved};active=operation;clearError();if(!retain)clearOutput();status(message,'busy');controls();
   const current=()=>active===operation && revision===operation.ticket && !operation.controller.signal.aborted;
   try {await fn({signal:operation.controller.signal,current,ticket:operation.ticket});}
-  catch(error){if(active===operation && revision===operation.ticket){clearOutput();errorMessage(error);status(operation.controller.signal.aborted?'Stopped. No successful image or preserved state was retained.':'Image operation refused. Review the error before trying again.','error');}}
+  catch(error){if(active===operation && revision===operation.ticket){if(!retain)clearOutput();errorMessage(error);status(retain?(operation.hadPreserved?'Restore refused. The prior image and saved state remain available.':'Restore refused. Choose another saved image.'):operation.controller.signal.aborted?'Stopped. No successful image or preserved state was retained.':'Image operation refused. Review the error before trying again.','error');}}
   finally{if(active===operation){active=null;controls();}}
 }
 function pngHeader(bytes){
@@ -74,6 +89,7 @@ async function browserPng(bytes,ctx){
   } finally{bitmap.close();}
 }
 function inputFacts(){
+  $('view-source').textContent=input.kind==='png'?'PNG source':input.kind==='qoi'?'Decoded QOI':'Saved image';
   $('source-name').textContent=input.name;
   $('source-size').textContent=`${input.kind.toUpperCase()} · ${number(input.fileBytes)} file bytes${input.pixels?` · ${input.pixels.width} × ${input.pixels.height}`:''}`;
   $('source-format').textContent=input.kind==='png'?'PNG / BROWSER':input.kind==='qoi'?'QOI / COMPILED':'CHECKPOINT / NATIVE';
@@ -99,20 +115,22 @@ function nativeEvidence(records){
   $('stats').textContent=JSON.stringify(records,null,2);$('evidence-details').hidden=!records.some(record=>record.stats);
 }
 function preservedFacts(preserved,restore){
-  $('preserved-facts').hidden=!preserved;if(!preserved)return;
+  $('preserved-facts').hidden=!preserved;$('preserved-details').hidden=!preserved;lifecycle(!!restore?.freed);if(!preserved)return;
+  $('restore-brief').textContent=restore?.freed?'Fresh allocation read and freed. The checkpoint can reopen it again.':'Decoder worker closed. Its pixel heap is retained.';
   const region=preserved.checkpoint.regions.find(value=>value.id===preserved.pixelRegionId);
   $('original-instance').textContent=preserved.checkpoint.originInstanceId;
   $('pixel-region').textContent=`${preserved.pixelRegionId} · ${number(region.capacity)} B · 0x${region.address.toString(16)}`;
   $('restored-instance').textContent=restore?.instanceId || 'Not restored';
   $('free-state').textContent=restore?.freed?'Native free completed; zero restored owned regions':'Pixel heap + descriptor saved; original worker closed';
-  $('preserve-status').textContent=restore?.freed?'Actual restored pixels are displayed. Native free retired the restored allocation; this saved document can create another fresh instance.':'Native pixel heap and descriptor checkpoint captured. Original decoder worker closed; original QOI input region released.';
+  $('preserve-status').textContent=restore?.freed?'Fresh worker read the retained pixels and completed native free. The saved checkpoint can reopen them again.':'Decoder worker closed. The saved allocation is ready to reopen in a different worker.';
 }
 function publish(value,ctx){
   if(!ctx.current())return;
   pixelShape(value);result={...value,revision:ctx.ticket};showCanvas('result-canvas',value);
   if(input.kind==='png')$('source-caption').textContent=`${input.pixels.width} × ${input.pixels.height} · browser-imported RGBA · retained comparison source`;
   if(input.kind!=='png'){showCanvas('source-canvas',value);$('source-title').textContent=input.kind==='state'?'Reopened image':'Native decoded source';$('source-caption').textContent=input.kind==='state'?'Pixels read from the validated saved native allocation.':'Source QOI decoded by original compiled instructions; no browser QOI decoder.';}
-  $('result-caption').textContent=`${value.width} × ${value.height} · ${number(value.rgba.length)} returned RGBA bytes · worker closed`;
+  $('result-title').textContent=value.restored?'Restored pixels':'Returned pixels';$('view-result').textContent=value.restored?'Restored pixels':'Returned pixels';
+  $('result-caption').textContent=`${value.width} × ${value.height} · ${number(value.rgba.length)} RGBA bytes · ${value.restored?'fresh worker read; native free complete':'decoder worker closed'}`;imageView('result');
   $('result-format').textContent=value.restored?'RGBA / RESTORED':'RGBA / NATIVE';
   $('output-size').textContent=value.qoi?`${number(value.qoi.length)} QOI bytes · ${number(value.rgba.length)} RGBA bytes`:`${number(value.rgba.length)} RGBA bytes · preserved input`;
   nativeEvidence(value.records || []);preservedFacts(value.preserved,value.restored);
@@ -134,7 +152,7 @@ async function runCodec(ctx){
   const records=[...(encoded?[{label:'Compiled QOI encode',stats:encoded.stats,instanceId:encoded.instanceId}]:[]),{label:'Compiled QOI decode',stats:decoded.stats,instanceId:decoded.instanceId}];
   publish({...decoded,qoi:new Uint8Array(qoi),records},ctx);
   if(!ctx.current())return;
-  comparison(encoded?'Every RGBA byte matches.':'QOI decoded in original instructions.',encoded?`${number(decoded.rgba.length)} bytes compared with browser-imported source. Encoder and decoder used separate worker identities.`:'Actual native decoder pixels are displayed. No independent source-pixel comparison is claimed for a QOI-only input.');
+  comparison(encoded?'Every RGBA byte matches.':'QOI decoded in original instructions.',encoded?`${number(decoded.rgba.length)} bytes compared with browser-imported source. Encoder and decoder used separate worker identities.`:'Compiled decoder output. No independent pixel baseline for QOI-only input.');
   status(encoded?'Encode → fresh decode verified. Every source RGBA byte matches; native image state preserved.':'Compiled QOI decode completed. Pixel heap preserved; original worker closed.','success');
 }
 async function loadImage(file){
@@ -154,22 +172,23 @@ async function loadImage(file){
   });
 }
 async function reopenState(file){
-  resetInput();
   await task('Validating and reopening preserved image…',async ctx=>{
     if(file.size>STATE_LIMIT)throw new Error('Preserved image JSON is limited to 8 MiB.');
     const saved=JSON.parse(await file.text());if(!ctx.current())return;
     const restored=await restorePixels(saved,{signal:ctx.signal});if(!ctx.current())return;
     if(restored.freed!==true || restored.instanceId===saved.checkpoint?.originInstanceId)throw new Error('Restore did not establish a fresh instance and completed native free.');
-    input={kind:'state',name:file.name,fileBytes:file.size};inputFacts();
+    pixelShape(restored);
+    clearOutput();input={kind:'state',name:file.name,fileBytes:file.size};inputFacts();
     publish({...restored,preserved:saved,restored,records:[{label:'Saved pixel allocation restored',instanceId:restored.instanceId,freed:restored.freed}]},ctx);
     comparison('Saved pixels reopened. Native allocation freed.','The matching module and checkpoint were validated by the runtime. This saved document is state, not authenticated image provenance.');
     status('Preserved image reopened in a fresh worker. Actual pixel bytes read; native free completed.','success');
-  });
+  },{retain:true});
 }
 function selectedPixels(){return result || input?.pixels;}
 function renderPixel(){
   const pixels=selectedPixels();
-  if(!pixels){$('loupe').hidden=true;$('loupe-empty').hidden=false;for(const id of ['red','green','blue','alpha'])$(id).textContent='—';$('pixel-value').textContent='No pixel selected';$('pixel-swatch').style.background='transparent';return;}
+  if(!pixels){$('pixel-origin').textContent='NO PIXELS YET';$('loupe').hidden=true;$('loupe-empty').hidden=false;for(const id of ['red','green','blue','alpha'])$(id).textContent='—';$('pixel-value').textContent='No pixel selected';$('pixel-swatch').style.background='transparent';return;}
+  $('pixel-origin').textContent=result?.restored?'RESTORED NATIVE BYTES':result?'NATIVE RETURNED BYTES':'BROWSER SOURCE BYTES';
   selection.x=Math.max(0,Math.min(pixels.width-1,Math.trunc(selection.x)||0));selection.y=Math.max(0,Math.min(pixels.height-1,Math.trunc(selection.y)||0));
   $('pixel-x').value=selection.x;$('pixel-x').max=pixels.width-1;$('pixel-y').value=selection.y;$('pixel-y').max=pixels.height-1;
   const offset=(selection.y*pixels.width+selection.x)*4,rgba=pixels.rgba.subarray(offset,offset+4);
@@ -191,6 +210,8 @@ function inspectCanvas(event,canvas){
   const rect=canvas.getBoundingClientRect();
   selection={x:Math.floor((event.clientX-rect.left)*pixels.width/rect.width),y:Math.floor((event.clientY-rect.top)*pixels.height/rect.height)};renderPixel();
 }
+$('view-source').addEventListener('click',()=>imageView('source'));
+$('view-result').addEventListener('click',()=>{if(result)imageView('result');});
 for(const id of ['source-canvas','result-canvas']){
   $(id).addEventListener('click',event=>inspectCanvas(event,$(id)));
   $(id).addEventListener('keydown',event=>{
@@ -222,10 +243,10 @@ $('restore').addEventListener('click',()=>{
     publish({...restored,qoi,preserved:saved,restored,records:[...records,{label:'Fresh heap restoration and native free',instanceId:restored.instanceId,freed:true}]},ctx);
     comparison('Restored pixels match. Native allocation freed.',`${number(expected.length)} RGBA bytes compared with the prior native output. Fresh instance identity; original free instructions retired restored regions.`);
     status('Fresh restore verified every pixel byte. Native image heap freed and worker closed.','success');
-  });
+  },{retain:true});
 });
 $('cancel').addEventListener('click',()=>{
-  if(!active)return;active.controller.abort();active=null;revision++;clearOutput();clearError();status('Stopped. Late results are discarded; no successful image state is available.','error');controls();
+  if(!active)return;const retained=active.retain,hadPreserved=active.hadPreserved;active.controller.abort();active=null;revision++;if(!retained)clearOutput();clearError();status(retained?(hadPreserved?'Restore stopped. The prior image and saved state remain available.':'Restore stopped. Choose a saved image to continue.'):'Stopped. Late results are discarded; no successful image state is available.','error');controls();
 });
 function download(name,bytes,type){const url=URL.createObjectURL(new Blob([bytes],{type})),link=node('a');link.href=url;link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 function basename(){return (input?.name || 'capsulith-image').replace(/\.[^.]+$/,'').replace(/[^A-Za-z0-9_-]+/g,'-').slice(0,60) || 'capsulith-image';}
