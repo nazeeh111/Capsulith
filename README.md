@@ -1,14 +1,12 @@
 # Capsulith
 
-**Preserve compiled native functions and initialized objects as portable machine code.** Keep their original ARM64 instructions, declare the calling contracts, and run selected methods from Node or a browser without the original application. Owned heaps, explicit region lifetimes and checkpoints resume in a fresh worker.
+**Run preserved native code. Reopen its initialized state.** Capsulith packages selected ARM64 functions, their calling contracts and owned memory for Node or the browser. Keep the original instructions and resume an initialized object in a fresh worker, without the original application.
 
 A legacy decoder, checksum or isolated binary routine can become a small reusable API. Capsulith shows which bytes and dependencies travel with it, where execution reads and writes, and why a feature cannot be extracted when it requires unsupported state.
 
-![Original LZ4 methods, restored dictionary access and exact native comparison in the object Studio](docs/objects-studio.png)
-
 ## Try it
 
-**[Open the native image workbench](https://nazeeh111.github.io/Capsulith/studio/image.html).** Bring a small PNG or QOI image. The extracted original QOI encoder writes a file, a separate native decoder returns its pixels, and you can inspect individual RGBA bytes. Preserve that initialized pixel allocation, close the worker, then restore and free it in a fresh one. No account, upload server, original binary or compiler is needed to run the public workbench.
+**[Open the native image workbench](https://nazeeh111.github.io/Capsulith/studio/image.html).** Choose **Load example** for the prepared QOI artwork, or bring a small PNG or QOI image. The extracted original QOI encoder writes a file, a separate native decoder returns its pixels, and you can inspect individual RGBA bytes. Preserve that initialized pixel allocation, close the worker, then restore and free it in a fresh one. No account, upload server, original binary or compiler is needed to run the public workbench.
 
 PNG uses browser-decoded RGBA as the explicit comparison baseline; QOI-only input has no independent source-pixel comparison. Images are bounded to 256 pixels per dimension and 1 MiB. This is a known-source prepared native component demonstration, not a new codec or universal format recovery. [Original QOI source, contracts, independent native/FFmpeg controls and standalone Node commands](examples/qoi/README.md).
 
@@ -23,13 +21,15 @@ python3 -m pip install capsulith-0.3.0-py3-none-any.whl
 capsulith studio
 ```
 
-Open http://127.0.0.1:6359. The function Studio retains the LZ4 decoder and xxHash specimens. Open **Object studio**, choose **Open original LZ4 example**, then **Run lifecycle** to create, compress, save a dictionary, checkpoint, restore, continue and free an actual compiled stream. No API key or paid service is needed. Python3.10+ and Capstone are needed for extraction; the browser executes through the included WebAssembly emulator. Node20+ is needed only for CLI or exported Node calls.
+Open http://127.0.0.1:6359. The function Studio retains the LZ4 decoder and xxHash specimens. Open **Object studio**, choose **Open original LZ4 example**, then **Run lifecycle** to create, compress, save a dictionary, checkpoint, restore, continue and free an actual compiled stream. No API key or paid service is needed. Python 3.10+ and Capstone are needed for extraction; the browser executes through the included WebAssembly emulator. Node 20+ is needed only for CLI or exported Node calls.
 
 The Studio accepts an ARM64 Mach-O dylib, inventories its functions, extracts a selected root, and lets you edit buffers, register arguments, scalar inputs and return type. The dependency view connects helpers/imports to actual call sites and original instructions. Execution events link to the named memory region and original code. Stopped executions show partial evidence without a successful-result claim.
 
 **Export portable capsule** downloads the current bytes, contract and inputs, Node/browser runners, pinned backend, full backend source/build scripts and licenses. Unzip and run `node run.cjs`, or serve that folder over HTTP and open its independent browser runner. Python, Capstone and the original binary are unnecessary for those calls. The exported API accepts different inputs, supports cancellation and enforces the declared limits.
 
 ## Keep an initialized native object
+
+![Original LZ4 methods, restored dictionary access and exact native comparison in the object Studio](docs/objects-studio.png)
 
 The object Studio imports extracted module JSON or reads your owned ARM64 Mach-O artifact with explicitly declared named methods. Inspect the actual roots, chunks and dependencies; allocate named caller buffers from hex or a local file; choose a method and supply typed region references or integers. The memory map shows real owned regions and initialization, with opaque raw bytes rather than guessed fields. Returns, access ranges, counters and bounded events come from original instructions.
 
@@ -67,7 +67,7 @@ Root selection also accepts a verified function-start address, such as `--root 0
 
 - Ordinary little-endian ARM64 Mach-O64 **dylibs with zero preferred image base**, symbol tables and `LC_FUNCTION_STARTS`. Private helper names may be stripped; function boundaries must remain.
 - Exact original instructions, direct branch/call and reachable fallthrough closure, conservative readonly `__const`/`__cstring` retention, explicit bounded `memmove`, `memcpy` and `memset` imports.
-- Up to eight integer-register arguments, named read/write/readwrite buffers and signed/unsigned32/64-bit returns. Every logical fetch/read/write is checked, including page padding and import accesses.
+- Up to eight integer-register arguments, named read/write/readwrite buffers and signed/unsigned 32/64-bit returns. Every logical fetch/read/write is checked, including page padding and import accesses.
 - Named method modules additionally support explicit `malloc`, `bzero` and `free` memory models, initialized owned heap bytes and code-bound checkpoints at method boundaries. No heap layout or pointer rewriting is inferred.
 - Dedicated workers, host wall-time termination, instruction quotas, bounded traces and cancellation. Uploaded binaries are parsed as bytes and never loaded natively by the product.
 
@@ -86,7 +86,7 @@ The tests exercise real complete library artifacts rather than handwritten algor
 
 The initialized stream compresses the first 65,536-byte packet to 8,459 bytes and the distinct 32,768-byte packet to 6,795 after restore, versus 8,355 in a fresh stream. Retained input and compiled `saveDict` paths both match the independent native oracle exactly. The browser Studio lifecycle also computed 8,459/6,795 bytes, read 8,205 bytes from retained history and retired the native heap through `freeStream`. These are finite functional comparisons, not a throughput benchmark.
 
-xxHash native controls additionally cover four actual pointer alignments, totaling4,400 native calls. Production pointers are currently aligned. Source licenses, literal oracle inputs/results, artifact hashes and compiler commands are retained in `examples/`. These finite controls support the declared scope; they are not universal equivalence or performance proofs.
+xxHash native controls additionally cover four actual pointer alignments, totaling 4,400 native calls. Production pointers are currently aligned. Source licenses, literal oracle inputs/results, artifact hashes and compiler commands are retained in `examples/`. These finite controls support the declared scope; they are not universal equivalence or performance proofs.
 
 Run the release gates from a source checkout:
 
