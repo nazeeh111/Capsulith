@@ -3,3 +3,20 @@
 
 /* Generic object bundles do not include the separate image workbench. */
 body[data-portable="true"]:not([data-image-workbench]) #image-nav{display:none}
+
+/* Put the prepared execution before its advanced contracts, in DOM and focus order. */
+.firstuse{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px;margin:24px 32px;background:var(--paper);border-color:var(--rule);padding:24px}
+.firstuse .eyebrow{margin:0 0 12px}
+.firstuse h2{font-size:22px;line-height:1.25;letter-spacing:-.5px;margin:0 0 12px}
+.firstuse .guide-sequence{font-size:12px;line-height:1.8;max-width:480px}
+.guide-actions{display:flex;align-items:center;gap:12px 18px;flex-wrap:wrap;margin:18px 0}
+.guide-actions button{min-height:44px;padding-inline:18px}
+.guide-actions a{font-size:11px;color:var(--green);text-underline-offset:4px}
+.firstuse details{margin:14px 0 0}
+.guide-evidence{border-left:1px solid var(--rule);padding-left:28px}
+.guide-evidence h3{font-size:12px;margin:1px 0 14px}
+.firstuse #demo-log{font-size:11px;line-height:1.8;margin:0;padding-left:21px}
+.firstuse #demo-log:empty{display:none}
+#demo-log:not(:empty)+.demo-empty{display:none}
+.firstuse .demo-empty{font-size:12px;line-height:1.8;color:var(--muted);max-width:340px;margin:0}
+@media(max-width:720px){.firstuse{grid-template-columns:1fr;gap:22px;margin:18px;padding:18px}.firstuse h2{font-size:21px}.firstuse .hint{font-size:11px}.guide-actions{gap:12px;margin:16px 0}.guide-actions button{min-width:130px}.guide-actions a{font-size:11px}.guide-evidence{border-left:0;border-top:1px solid var(--rule);padding:18px 0 0}.firstuse #demo-log{font-size:11px}}
