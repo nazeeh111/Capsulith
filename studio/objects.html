@@ -15,6 +15,21 @@
     <div class="scope">Prepared ARM64 direct closures and declared memory imports. Method signatures are caller supplied. Trusted artifact rights and ABI, the native calling convention, remain your responsibility. No inferred layouts, OS loading, arbitrary components, or security isolation claim.</div>
     <div id="status" class="status" role="status" aria-live="polite"><span class="dot"></span><span id="status-text">Import a module or open the original LZ4 example.</span></div>
     <div id="error" class="error" role="alert" hidden></div>
+    <section id="example-guide" class="guide firstuse" aria-labelledby="example-title" hidden>
+      <div class="guide-start">
+        <p class="eyebrow">ORIGINAL COMPILED LZ4 / GUIDED PROOF</p>
+        <h2 id="example-title">Try the prepared native object.</h2>
+        <p class="guide-sequence">Create → compress → save dictionary → close → restore → continue → free.</p>
+        <div class="guide-actions"><button id="run-demo" class="primary" disabled>Run lifecycle</button><a href="#workspace-title">Work with methods ↓</a><a href="#source-title">Inspect module &amp; contracts ↓</a></div>
+        <p class="hint">Every step executes original compiled roots. The comparison appears only after computed compressed bytes match the supplied native oracle. This example does not establish support for other component ABIs.</p>
+        <details><summary>Example source &amp; comparison context</summary><pre id="example-context"></pre></details>
+      </div>
+      <div class="guide-evidence">
+        <h3>Lifecycle record</h3>
+        <ol id="demo-log"></ol>
+        <p class="demo-empty">No lifecycle run yet. Its actual steps, byte comparison and worker change will appear here.</p>
+      </div>
+    </section>
     <div class="studio">
       <section class="source pane" aria-labelledby="source-title">
         <div class="pane-title"><span>01</span><h2 id="source-title">Module & contracts</h2></div>
@@ -31,7 +46,7 @@
       </section>
       <section class="workspace pane" aria-labelledby="workspace-title">
         <div class="pane-title"><span>02</span><h2 id="workspace-title">Owned memory & methods</h2></div>
-        <section id="example-guide" class="guide" hidden><div class="guide-top"><span class="eyebrow">ORIGINAL COMPILED LZ4 / GUIDED PROOF</span><button id="run-demo" class="primary" disabled>Run lifecycle</button></div><p>Create → compress 65,536 bytes → save dictionary → release input → checkpoint → close → restore → continue 32,768 bytes → free.</p><p class="hint">Every step executes original compiled roots. The comparison appears only after computed compressed bytes match the supplied native oracle. This example does not establish support for other component ABIs.</p><ol id="demo-log"></ol><details><summary>Example source & comparison context</summary><pre id="example-context"></pre></details></section>
+
         <section class="buffer-editor"><h3>Allocate caller memory</h3><div class="buffer-fields"><label>Name<input id="buffer-name" value="input" maxlength="80"></label><label>Access<select id="buffer-access"><option value="read">read</option><option value="write">write</option><option value="readwrite">readwrite</option></select></label><label>Capacity · bytes<input id="buffer-capacity" type="number" min="0" max="16777216" value="64"></label></div><label>Initial bytes · hex<textarea id="buffer-hex" spellcheck="false" rows="3" placeholder="00 01 02 03"></textarea></label><div class="buffer-foot"><label class="file-small">Use local file<input id="buffer-file" type="file"></label><span id="buffer-size" class="hint">0 supplied bytes</span><button id="allocate" disabled>Allocate buffer +</button></div><p class="hint">Read-only access ends at supplied bytes. Other caller buffers zero-fill remaining capacity. Retained native pointers require the same region to stay live until the component's declared lifecycle releases them.</p></section>
         <section class="call-editor"><div class="section-top"><h3>Call a named method</h3><label>Method<select id="method" disabled><option>No module</option></select></label></div><p id="method-contract" class="hint">Choose a caller-declared contract.</p><div id="args"></div><div class="budget-fields"><label>Instructions<input id="instructions" type="number" min="1" max="10000000" value="1000000"></label><label>Events · 0 disables<input id="trace-limit" type="number" min="0" max="200000" value="0"></label><label>Deadline · ms<input id="timeout" type="number" min="1" max="60000" value="5000"></label></div><div class="buttons"><button id="call" class="primary" disabled>Execute original instructions →</button><button id="cancel" disabled>Cancel</button></div><p class="hint">Inputs freeze for each call. Editing while a call is running discards its worker and results. A fault or cancellation requires a prior checkpoint or a new instance.</p></section>
         <section class="memory"><div class="section-top"><h3>Live owned regions</h3><span id="memory-total" class="mono">0 bytes</span></div><p id="map-state" class="hint">No live state. Heap fields remain opaque.</p><div class="legend"><span><i class="known"></i>initialized</span><span><i class="unknown"></i>unknown</span><span><i class="caller"></i>caller buffer</span></div><div id="region-map" class="placeholder">Allocate a buffer or call a factory to observe owned memory.</div><div id="region-detail" hidden><div class="section-top"><h3 id="region-title"></h3><button id="release" disabled>Release caller buffer</button></div><p id="region-meta" class="hint"></p><label class="byte-offset">Preview offset · bytes<input id="preview-offset" type="number" min="0" value="0"></label><pre id="region-bytes" class="byte-view"></pre><p class="hint">Raw hex only; ?? marks uninitialized heap bytes. This preview displays 128 bytes. Release is explicit and never guesses native reachability.</p><label class="inspect">Runtime read · length<input id="read-length" type="number" min="0" max="4096" value="64"><button id="read" disabled>Read region</button></label><pre id="read-result"></pre></div></section>

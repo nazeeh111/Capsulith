@@ -316,14 +316,14 @@
     },
     {
       "path": "studio/objects.css",
-      "bytes": 10891,
-      "sha256": "95972f286920a5c891ac6664f96ec13cbe902fbda625cdfeb1148ada3b6e4ef5",
+      "bytes": 12363,
+      "sha256": "7394b9efdabb06705683e4baf72f285a4d6f2f6dea6688b4aa1728be3e68f922",
       "mode": 420
     },
     {
       "path": "studio/objects.html",
-      "bytes": 11285,
-      "sha256": "54b2e0f1718a9b8b288fd93eb0ac820936ff5808be53b3e57d8d6ea853ee3288",
+      "bytes": 11783,
+      "sha256": "12d5893af118d15304cf8dbbec97c17d86a9c57fa5ccaa85da52ff76c0a7d3cb",
       "mode": 420
     },
     {
