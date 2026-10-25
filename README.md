@@ -6,7 +6,7 @@ A legacy decoder, checksum or isolated binary routine can become a small reusabl
 
 ## Try it
 
-**[Open the native image workbench](https://nazeeh111.github.io/Capsulith/studio/image.html).** Choose **Load example** for the prepared QOI artwork, or bring a small PNG or QOI image. The extracted original QOI encoder writes a file, a separate native decoder returns its pixels, and you can inspect individual RGBA bytes. Preserve that initialized pixel allocation, close the worker, then restore and free it in a fresh one. No account, upload server, original binary or compiler is needed to run the public workbench.
+**[Open the native image workbench](https://nazeeh111.github.io/Capsulith/studio/image.html).** Choose **Load & run example** for the prepared QOI artwork, or bring a small PNG or QOI image. The extracted original QOI encoder writes a file, a separate native decoder returns its pixels, and you can inspect individual RGBA bytes. Preserve that initialized pixel allocation, close the worker, then restore and free it in a fresh one. No account, upload server, original binary or compiler is needed to run the public workbench.
 
 PNG uses browser-decoded RGBA as the explicit comparison baseline; QOI-only input has no independent source-pixel comparison. Images are bounded to 256 pixels per dimension and 1 MiB. This is a known-source prepared native component demonstration, not a new codec or universal format recovery. [Original QOI source, contracts, independent native/FFmpeg controls and standalone Node commands](examples/qoi/README.md).
 
