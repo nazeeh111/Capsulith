@@ -99,9 +99,9 @@ node examples/xxhash/check-node.cjs
 
 On Apple Silicon, `python3 examples/xxhash/build-native-oracle.py /tmp/new-xxhash-proof` rebuilds both full native controls into a fresh directory and compares them with the retained oracle. The object oracle can be reproduced with `python3 examples/native-objects/build-native-oracle.py /tmp/new-object-proof`, using the pinned known-source LZ4 fixture on Apple Silicon. Native loading is confined to these controlled fixture generators; product extraction parses bytes and execution uses Wasm.
 
-## Architecture and prior work
+## Architecture
 
-The Python parser and Capstone disassembly build an inspectable dependency capsule. The JavaScript runtime executes those bytes through [Unicorn.js](https://github.com/AlexAltea/unicorn.js) and [Unicorn](https://github.com/unicorn-engine/unicorn), established CPU-emulation projects. Browser execution of native instructions is their capability. [angr callable](https://docs.angr.io/en/latest/api/angr.callable.html), [Qiling](https://docs.qiling.io/) and [rev.ng](https://docs.rev.ng/) also provide established binary execution, analysis or lifting mechanisms.
+The Python parser and Capstone disassembly build an inspectable dependency capsule. The JavaScript runtime executes those bytes through [Unicorn.js](https://github.com/AlexAltea/unicorn.js) and [Unicorn](https://github.com/unicorn-engine/unicorn), established CPU-emulation projects. Browser execution of native instructions is their capability.
 
 Capsulith combines extraction, declared contracts, accessible execution evidence and independently reusable exports, now including explicit initialized object ownership and detached checkpoint continuation. It does not claim to invent emulation, binary analysis or function isolation. LZ4 and xxHash are public, verifiable specimens; their existing source can also be compiled directly to Wasm. The capsule workflow is intended for supported compiled artifacts whose isolated feature you want to retain.
 
