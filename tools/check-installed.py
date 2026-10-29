@@ -204,8 +204,7 @@ with tempfile.TemporaryDirectory(prefix="capsulith-installed-") as directory:
                     target.is_file() and target.read_bytes() == source.read_bytes()
                 ), str(source.relative_to(ROOT))
                 asset_files += 1
-    for name in ("LICENSE", "THIRD_PARTY_NOTICES.md"):
-        assert (resources / name).read_bytes() == (ROOT / name).read_bytes()
+    assert (resources / "LICENSE").read_bytes() == (ROOT / "LICENSE").read_bytes()
     image_runner = resources / "examples/qoi/run.cjs"
     image = run(
         [NODE, str(image_runner), "decode", str(resources / "examples/qoi/orbit.qoi"),

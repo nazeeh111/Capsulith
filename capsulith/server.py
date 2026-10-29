@@ -139,7 +139,6 @@ class Handler(BaseHTTPRequestHandler):
             "/examples/qoi/module.json",
             "/examples/qoi/orbit.qoi",
             "/examples/qoi/orbit.png",
-            "/THIRD_PARTY_NOTICES.md",
             "/LICENSE",
         ):
             target = root / path.lstrip("/")

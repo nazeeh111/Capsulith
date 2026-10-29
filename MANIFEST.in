@@ -6,6 +6,6 @@ recursive-include tools *.py
 recursive-include docs *.png *.jpg
 recursive-include .github *.yml
 include CHANGELOG.md CONTRIBUTING.md SECURITY.md
-include LICENSE THIRD_PARTY_NOTICES.md
+include LICENSE
 global-exclude *.pyc *.pyo
 prune examples/native-objects/__pycache__

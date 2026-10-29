@@ -34,7 +34,7 @@ def export_zip(capsule, inputs):
         )
         archive.writestr(
             "README.md",
-            "# Portable Capsulith capsule\n\nRun `node run.cjs` (Node20+) or serve this folder with `python3 -m http.server 8000` and open http://localhost:8000. Python is only an optional static server, not an execution dependency. Edit inputs.json or pass a different input filename to run.cjs. Browser inputs are editable. The contract and original bytes are in capsule.json. Execution limits and supported memory imports are documented in runtime/README.md. Trace capture is explicitly off by default in this portable runner; the API accepts a bounded traceLimit. No original binary or Python package is needed.\n\nUse only artifacts you have permission to extract and redistribute. GPL-2.0-only runtime and exact corresponding backend source/build scripts included; see THIRD_PARTY_NOTICES.md.\n",
+            "# Portable Capsulith capsule\n\nRun `node run.cjs` (Node20+) or serve this folder with `python3 -m http.server 8000` and open http://localhost:8000. Python is only an optional static server, not an execution dependency. Edit inputs.json or pass a different input filename to run.cjs. Browser inputs are editable. The contract and original bytes are in capsule.json. Execution limits and supported memory imports are documented in runtime/README.md. Trace capture is explicitly off by default in this portable runner; the API accepts a bounded traceLimit. No original binary or Python package is needed.\n\nUse only artifacts you have permission to extract and redistribute. GPL-2.0-only runtime and exact corresponding backend source/build scripts included; see LICENSE.\n",
         )
         for file in sorted((root / "runtime").rglob("*")):
             if file.is_file() and "__pycache__" not in file.parts:
@@ -44,6 +44,5 @@ def export_zip(capsule, inputs):
                 root / "examples" / specimen / "LICENSE",
                 f"licenses/{specimen}-BSD-2-Clause.txt",
             )
-        for name in ("LICENSE", "THIRD_PARTY_NOTICES.md"):
-            archive.write(root / name, name)
+        archive.write(root / "LICENSE", "LICENSE")
     return stream.getvalue()

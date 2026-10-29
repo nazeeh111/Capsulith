@@ -18,9 +18,6 @@ class BuildAssets(build_py):
                 ignore=shutil.ignore_patterns("__pycache__", "*.pyc"),
             )
         shutil.copy2(root / "LICENSE", destination / "LICENSE")
-        shutil.copy2(
-            root / "THIRD_PARTY_NOTICES.md", destination / "THIRD_PARTY_NOTICES.md"
-        )
 
 
 setup(cmdclass={"build_py": BuildAssets})

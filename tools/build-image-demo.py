@@ -48,8 +48,7 @@ def main():
         files[f"licenses/{specimen}-BSD-2-Clause.txt"] = (
             ROOT / "examples" / specimen / "LICENSE"
         ).read_bytes()
-    for name in ("LICENSE", "THIRD_PARTY_NOTICES.md"):
-        files[name] = (ROOT / name).read_bytes()
+    files["LICENSE"] = (ROOT / "LICENSE").read_bytes()
     files["index.html"] = (
         b'<!doctype html><html lang="en"><meta charset="utf-8"><meta http-equiv="refresh" content="0;url=studio/image.html"><title>Capsulith native image workbench</title><a href="studio/image.html">Open image workbench</a></html>\n'
     )

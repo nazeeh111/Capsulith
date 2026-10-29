@@ -86,7 +86,6 @@ class HTTPTests(unittest.TestCase):
             "examples/qoi/module.json",
             "examples/qoi/orbit.qoi",
             "examples/qoi/orbit.png",
-            "THIRD_PARTY_NOTICES.md",
             "LICENSE",
         ):
             status, data = self.request("/" + name)

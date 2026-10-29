@@ -116,7 +116,7 @@ cannot produce a successful checkpoint. The complete program has a 60s limit.
 
 GPL-2.0-only runtime, corresponding backend source and build scripts are
 included under runtime/vendor/. Preserve all notices and use only artifacts
-you may extract and redistribute. See LICENSE and THIRD_PARTY_NOTICES.md.
+you may extract and redistribute. See LICENSE.
 manifest.json lists exact file bytes, SHA256 and Unix permissions except itself.
 """,
     )
@@ -140,8 +140,7 @@ manifest.json lists exact file bytes, SHA256 and Unix permissions except itself.
                 raise ValueError("Studio portable-mode entry point is missing")
             data = data.replace(b"<body>", b'<body data-portable="true">', 1)
         add("studio/" + name, data)
-    for name in ("LICENSE", "THIRD_PARTY_NOTICES.md"):
-        add(name, (root / name).read_bytes())
+    add("LICENSE", (root / "LICENSE").read_bytes())
     for specimen in ("lz4", "xxhash"):
         add(
             f"licenses/{specimen}-BSD-2-Clause.txt",
