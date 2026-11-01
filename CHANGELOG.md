@@ -13,6 +13,8 @@ This is a packaging update to already merged code. It does not change calling
 contracts, default runtime limits or supported artifacts. Large-checkpoint
 completion can still vary with host load; no deadline or performance guarantee
 is added. Existing release assets and third-party source/licenses are retained.
+CI runs Node test files serially so unrelated emulator work does not compete
+with short deadline checks. Their assertions and runtime ceilings are unchanged.
 
 ## 0.3.0
 
