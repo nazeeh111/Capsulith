@@ -2,15 +2,15 @@
 
 **Run preserved native code. Reopen its initialized state.** Capsulith packages selected ARM64 functions, their calling contracts and owned memory for Node or the browser. Keep the original instructions and resume an initialized object in a fresh worker, without the original application.
 
-A legacy decoder, checksum or isolated binary routine can become a small reusable API. Capsulith shows which bytes and dependencies travel with it, where execution reads and writes, and why a feature cannot be extracted when it requires unsupported state.
-
 ## Try it
 
-**[Open the native image workbench](https://nazeeh111.github.io/Capsulith/studio/image.html).** Choose **Load & run example** for the prepared QOI artwork, or bring a small PNG or QOI image. The extracted original QOI encoder writes a file, a separate native decoder returns its pixels, and you can inspect individual RGBA bytes. Preserve that initialized pixel allocation, close the worker, then restore and free it in a fresh one. No account, upload server, original binary or compiler is needed to run the public workbench.
+[Open the native image workbench](https://nazeeh111.github.io/Capsulith/studio/image.html) and choose **Load & run example**. The prepared QOI case runs locally without an account, upload server, original binary or compiler.
+
+![Actual browser-imported PNG, compiled QOI round trip and restored native pixel heap](docs/image-workbench.jpg)
 
 PNG uses browser-decoded RGBA as the explicit comparison baseline; QOI-only input has no independent source-pixel comparison. Images are bounded to 256 pixels per dimension and 1 MiB. This is a known-source prepared native component demonstration, not a new codec or universal format recovery. [Original QOI source, contracts, independent native/FFmpeg controls and standalone Node commands](examples/qoi/README.md).
 
-![Actual browser-imported PNG, compiled QOI round trip and restored native pixel heap](docs/image-workbench.jpg)
+Bring a small PNG or QOI image. The extracted original encoder writes a QOI file, a separate native decoder returns its pixels, and you can inspect individual RGBA bytes. Preserve the initialized pixel allocation, close the worker, then restore and free it in a fresh one.
 
 Try the [keyless browser object demo](https://nazeeh111.github.io/Capsulith/) and press **Run lifecycle**. It executes the actual extracted instructions locally; it does not call a server to generate results.
 
@@ -52,6 +52,8 @@ Choose new output names; module, checkpoint and object export commands refuse to
 An object export contains the original instruction module, optional retained checkpoint bytes, independent Node/browser runners, the object Studio, runtime and corresponding backend source/build scripts, licenses, and a file manifest with bytes, SHA256 and permissions. Serve the folder and open `index.html` to restore the bundled checkpoint without API endpoints, or run `node run.cjs your-operations.json --checkpoint checkpoint.json`. Original binaries, Python packages and compilers are unnecessary for execution. A checkpoint includes retained caller bytes; inspect them before sharing. See [the object API and operation format](runtime/OBJECTS.md) and [the native example](examples/native-objects/README.md).
 
 ## Use your own artifact
+
+A legacy decoder, checksum or isolated binary routine can become a small reusable API. Capsulith shows which bytes and dependencies travel with it, where execution reads and writes, and why a feature cannot be extracted when it requires unsupported state.
 
 ```sh
 capsulith inspect legacy.dylib
