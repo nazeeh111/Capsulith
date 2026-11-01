@@ -8,17 +8,19 @@ Bring a PNG or QOI image up to 256 pixels per dimension and 1 MiB. PNG uses the 
 
 ## Standalone Node
 
-Node20+, from any working directory, no original dylib/compiler/Python package:
+Extract the [standalone image workbench ZIP](https://github.com/nazeeh111/Capsulith/releases/download/v0.3.1/capsulith-image-workbench-0.3.1.zip) into a new folder ([checksums](https://github.com/nazeeh111/Capsulith/releases/download/v0.3.1/SHA256SUMS.txt)). Keep its directory structure. From the extracted folder or Capsulith repository root, run the commands below with Node 20+. No original dylib, compiler, Python package or npm install is needed.
 
 ```sh
-node examples/qoi/run.cjs decode input.qoi --out NEW-pixels.rgba --preserve NEW-image.json
+node examples/qoi/run.cjs decode examples/qoi/orbit.qoi --out NEW-pixels.rgba --preserve NEW-image.json
 node examples/qoi/run.cjs restore NEW-image.json --out NEW-restored.rgba
 node examples/qoi/run.cjs encode 128 96 NEW-restored.rgba --out NEW-image.qoi
 ```
 
-RGBA is unpremultiplied four-byte row-major pixel data. Outputs must be distinct new paths. Restoring reads the native descriptor and pixel heap from the matching checkpoint; its limits and consumed counters survive. Image JSON includes your pixels, so inspect it before sharing. Its digest detects accidental changes, not authenticity or permission to publish.
+The included Orbit image is 128 × 96 pixels. For another image, replace the input path and use its dimensions when encoding. RGBA is unpremultiplied four-byte row-major pixel data. Outputs must be distinct new paths. Restoring reads the native descriptor and pixel heap from the matching checkpoint; its limits and consumed counters survive. Image JSON includes your pixels, so inspect it before sharing. Its digest detects accidental changes, not authenticity or permission to publish.
 
 ## Reproduce the evidence
+
+The rebuild and test commands below require a full source checkout; the standalone ZIP is for execution.
 
 Eight original synthetic images cover solid runs, repeated palette, RGB, wrapping deltas, transparent channels, Orbit and the 256×256 bound. The immutable source is [QOI ffb2d2c](https://github.com/phoboslab/qoi/tree/ffb2d2cb74a1de60819b21b939f7209aa53e91c1). Full source/header/license and the known compiled artifact are in this repository. `component.c` defines QOI_IMPLEMENTATION/QOI_NO_STDIO and adds an explicit free adapter, without changing the codec body. Apple Clang ARM64 -O1/-fno-stack-protector prepares this bounded specimen. Default stack-guard imports are unsupported, not silently stripped by extraction.
 
