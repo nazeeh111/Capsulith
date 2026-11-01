@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.3.1
+
+Packages the merged Node checkpoint conversion and current image/object Studios
+in the wheel. The standalone image ZIP includes the updated image Studio and
+runtime. Node uses native Buffer
+hex conversion after the existing input checks; the browser conversion path is
+unchanged. The Studios include the current pixel comparison, fresh-worker
+recovery and object-lifecycle presentation.
+
+This is a packaging update to already merged code. It does not change calling
+contracts, default runtime limits or supported artifacts. Large-checkpoint
+completion can still vary with host load; no deadline or performance guarantee
+is added. Existing release assets and third-party source/licenses are retained.
+
 ## 0.3.0
 
 Adds a native image workbench: prepared original ARM64 QOI encoder/decoder instructions produce the visible pixels and downloadable files. PNG inputs use browser-decoded RGBA as the explicit baseline; QOI inputs run the native decoder. Inspect individual returned pixels, compare an actual encode/decode round trip, preserve the initialized pixel heap, close its worker, and restore/free it in a fresh worker. Image files remain local and exports are voluntary.
