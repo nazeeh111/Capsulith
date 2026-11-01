@@ -84,6 +84,8 @@
       !/^[0-9a-fA-F]*$/.test(s)
     )
       fail("VALIDATION", `${label} must be bounded exact hexadecimal`);
+    // Keep admission identical, then use the native conversion for large Node snapshots.
+    if (node) return new Uint8Array(Buffer.from(s, "hex"));
     const bytes = new Uint8Array(s.length / 2);
     for (let i = 0; i < bytes.length; i++)
       bytes[i] = parseInt(s.slice(i * 2, i * 2 + 2), 16);
@@ -93,6 +95,7 @@
     i.toString(16).padStart(2, "0"),
   );
   function tohex(b) {
+    if (node) return Buffer.from(b).toString("hex");
     let out = "";
     for (let start = 0; start < b.length; start += 32768) {
       const stop = Math.min(start + 32768, b.length),
