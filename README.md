@@ -35,7 +35,11 @@ The object Studio imports extracted module JSON or reads your owned ARM64 Mach-O
 
 Save a checkpoint before an operation you may need to undo. Restoring a matching module preserves guest addresses and region IDs but creates a fresh instance identity; rebind references by region ID. Editing inputs revokes stale evidence, and a fault or cancellation requires a prior checkpoint or a new instance. Native free and caller-buffer release are separate explicit lifecycle operations. The runtime never guesses whether native pointers still refer to a buffer.
 
+The CLI example uses files from the repository. The wheel installation above does not put `examples/` or `runtime/` in your working directory. From a directory without an existing `Capsulith` folder, clone the repository and run the commands from its root:
+
 ```sh
+git clone https://github.com/nazeeh111/Capsulith.git
+cd Capsulith
 capsulith module examples/lz4/liblz4.dylib \
   --methods examples/native-objects/methods.json --out stream.module.json
 node runtime/object-cli.cjs examples/native-objects/start.json \
