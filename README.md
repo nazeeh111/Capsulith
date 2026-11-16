@@ -27,3 +27,6 @@ GPL-2.0-only runtime, corresponding backend source and build scripts are
 included under runtime/vendor/. Preserve all notices and use only artifacts
 you may extract and redistribute. See LICENSE and THIRD_PARTY_NOTICES.md.
 manifest.json lists exact file bytes, SHA256 and Unix permissions except itself.
+
+
+Current workbenches: [native objects](studio/objects.html), [image memory](studio/image.html), and the [prepared LZ4 function](studio/index.html). The function example accepts editable declared inputs; arbitrary artifact extraction requires the local Python workspace. Current presentation and runtime follow source `4cdce6507dc75df7a05eaeae1be7ae041245194b`. The portable body attributes and component notices remain intact.
