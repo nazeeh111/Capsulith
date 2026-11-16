@@ -4,6 +4,7 @@
 import json
 import mimetypes
 import subprocess
+import socketserver
 import sys
 import tempfile
 import threading
@@ -61,6 +62,11 @@ class StudioServer(ThreadingHTTPServer):
     def __init__(self, *args, **kwargs):
         self.connections = threading.BoundedSemaphore(16)
         super().__init__(*args, **kwargs)
+
+    def server_bind(self):
+        # The Studio advertises a numeric loopback URL; reverse DNS is unnecessary.
+        socketserver.TCPServer.server_bind(self)
+        self.server_name, self.server_port = self.server_address[:2]
 
     def process_request(self, request, client_address):
         if not self.connections.acquire(blocking=False):
