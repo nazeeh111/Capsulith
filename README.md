@@ -2,26 +2,60 @@
 
 **Run preserved native code. Reopen its initialized state.** Capsulith packages selected ARM64 functions, their calling contracts and owned memory for Node or the browser. Keep the original instructions and resume an initialized object in a fresh worker, without the original application.
 
+## Current development source
+
+This checkout is **0.3.2.dev0**, an unreleased successor to the published 0.3.1
+package. It retains the original native-code specimens and study records.
+`capsulith --version` reports the installed Python package; the local server's
+`/api/meta` reports that same version and its three workbench routes. The private
+JavaScript runtime package keeps its separate 0.2.0 identity.
+
 ## Try it
 
 [Open the native image workbench](https://nazeeh111.github.io/Capsulith/studio/image.html) and choose **Load & run example**. The prepared QOI case runs locally without an account, upload server, original binary or compiler.
 
-![Actual browser-imported PNG, compiled QOI round trip and restored native pixel heap](docs/image-workbench.jpg)
+![Bundled PNG after original ARM64 QOI encoding and decoding, with native pixels matching the browser source](docs/image-workbench-current.png)
+
+[Current capture and workflow evidence](docs/image-workbench-current.md).
 
 PNG uses browser-decoded RGBA as the explicit comparison baseline; QOI-only input has no independent source-pixel comparison. Images are bounded to 256 pixels per dimension and 1 MiB. This is a known-source prepared native component demonstration, not a new codec or universal format recovery. [Original QOI source, contracts, independent native/FFmpeg controls and standalone Node commands](examples/qoi/README.md).
 
-Bring a small PNG or QOI image. The extracted original encoder writes a QOI file, a separate native decoder returns its pixels, and you can inspect individual RGBA bytes. Preserve the initialized pixel allocation, close the worker, then restore and free it in a fresh one.
+For PNG input, the extracted original encoder writes a QOI file and a separate native decoder returns its pixels for comparison with browser-decoded RGBA. QOI input goes directly to the original decoder. Inspect individual bytes, preserve the initialized pixel allocation, then restore and free it in a fresh worker.
 
 Try the [keyless browser object demo](https://nazeeh111.github.io/Capsulith/) and press **Run lifecycle**. It executes the actual extracted instructions locally; it does not call a server to generate results.
 
-Download the Python wheel from the [release](https://github.com/nazeeh111/Capsulith/releases/latest), then:
+The [published release](https://github.com/nazeeh111/Capsulith/releases/latest)
+contains the historical 0.3.1 package. To try this development generation, build
+its wheel from this complete source checkout with the existing Python build tools:
 
 ```sh
-python3 -m pip install capsulith-0.3.1-py3-none-any.whl
-capsulith studio
+python3 -m pip wheel . --no-deps -w dist
+python3 -m pip install dist/capsulith-0.3.2.dev0-py3-none-any.whl
+capsulith --version
+capsulith studio --view images
 ```
 
-Open http://127.0.0.1:6359. The function Studio retains the LZ4 decoder and xxHash specimens. Open **Object studio**, choose **Open original LZ4 example**, then **Run lifecycle** to create, compress, save a dictionary, checkpoint, restore, continue and free an actual compiled stream. No API key or paid service is needed. Python 3.10+ and Capstone are needed for extraction; the browser executes through the included WebAssembly emulator. Node 20+ is needed only for CLI or exported Node calls.
+Open the exact printed URL, normally http://127.0.0.1:6359/studio/image.html.
+No browser opens automatically. `--port 0` chooses an available loopback port;
+Ctrl-C stops only this server. Choose `--view functions` or `--view objects` for
+the other starting pages, or use their navigation links. The wheel bundles the
+Studio, prepared examples, runtime, emulator and required source/licenses; it
+works from a directory outside the checkout. Python needs the declared
+`capstone==5.0.9` dependency. The source checkout remains necessary for the
+repository-relative expert examples below.
+
+In the image workbench, **Load & run example** decodes the bundled QOI.
+For a source-pixel comparison, open `examples/qoi/orbit.png` and choose
+**Encode & verify pixels**. **Save preserved JSON** stores the retained
+native pixel allocation. Reopen that file using **Reopen preserved image** to read those bytes in a fresh
+worker and execute the original free. **Reopen in a fresh worker** performs the
+same fresh-instance check directly on the current retained image.
+A mismatched checkpoint is refused while the prior valid image remains available.
+Keep checkpoint bytes private if they contain private caller data. Saving a PNG
+compares pixels, not the original PNG file bytes; QOI-only input has no independent
+source-pixel comparison.
+
+The function Studio retains the LZ4 decoder and xxHash specimens. Open **Object studio**, choose **Open original LZ4 example**, then **Run lifecycle** to create, compress, save a dictionary, checkpoint, restore, continue and free an actual compiled stream. No API key or paid service is needed. Python 3.10+ and Capstone are needed for extraction; the browser executes through the included WebAssembly emulator. Node 20+ is needed only for CLI or exported Node calls.
 
 The Studio accepts an ARM64 Mach-O dylib, inventories its functions, extracts a selected root, and lets you edit buffers, register arguments, scalar inputs and return type. The dependency view connects helpers/imports to actual call sites and original instructions. Execution events link to the named memory region and original code. Stopped executions show partial evidence without a successful-result claim.
 
@@ -66,6 +100,19 @@ capsulith extract legacy.dylib --root _decode \
 capsulith run decode.capsule.json --inputs input.json
 capsulith export decode.capsule.json --inputs input.json --out decoder.zip
 ```
+
+`extract` and `export` may replace an unrelated existing output, but refuse an
+output that aliases any of their inputs, including symbolic and hard links.
+Complete output bytes are staged beside the destination before replacement;
+a failed write leaves the previous output intact. Invalid parent traversal is
+refused, including inside a symlink's referent; valid normalized paths and dangling
+final symlinks with valid parents remain supported. Output symlinks retain their
+referent, and ordinary permission bits are kept. Existing outputs must also pass
+the OS's non-truncating write-open permission check; new outputs use mode 0600 on POSIX.
+Replacement needs write access to the destination directory and does not retain
+other inode metadata or hard-link relationships. This does not guarantee
+power-loss recovery or protection against concurrent path substitution.
+The object commands above retain their exclusive-create policy.
 
 Root selection also accepts a verified function-start address, such as `--root 0x440`. An exported symbol is not a prototype. You supply the actual calling contract; Capsulith does not infer an ABI (the rules that put arguments and return values into registers). The [runtime guide](runtime/README.md) defines buffers, 32/64-bit integers, memory imports and limits. `examples/xxhash/contract.json` is a complete three-argument example.
 

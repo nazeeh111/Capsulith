@@ -10,8 +10,15 @@ import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import unquote, urlsplit
 
+from . import __version__
 from .export import export_zip
 from .resources import resource_root
+
+STUDIO_VIEWS = {
+    "functions": "/",
+    "objects": "/studio/objects.html",
+    "images": "/studio/image.html",
+}
 
 MAX_BODY = 48 * 1024 * 1024
 MAX_OBJECT_EXPORT_BODY = 96 * 1024 * 1024
@@ -80,7 +87,7 @@ class StudioServer(ThreadingHTTPServer):
 
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = "Capsulith/0.3"
+    server_version = f"Capsulith/{__version__}"
 
     def setup(self):
         super().setup()
@@ -123,6 +130,13 @@ class Handler(BaseHTTPRequestHandler):
             return
         path = unquote(urlsplit(self.path).path)
         root = resource_root()
+        if path == "/api/meta":
+            self.send(200, {
+                "name": "Capsulith", "version": __version__, "views": STUDIO_VIEWS,
+                "execution": "browser workers / Wasm; Node for CLI calls",
+                "analysis": "bounded subprocess; artifacts parsed as bytes",
+            })
+            return
         if path == "/api/examples":
             self.send(200, json.loads((root / "examples" / "studio.json").read_text()))
             return
@@ -226,13 +240,15 @@ class Handler(BaseHTTPRequestHandler):
             self.send(422, {"error": str(error)})
 
 
-def serve(port=6359):
+def serve(port=6359, view="functions"):
+    path = STUDIO_VIEWS[view]
     with StudioServer(("127.0.0.1", port), Handler) as server:
         print(
-            f"Capsulith Studio: http://127.0.0.1:{server.server_address[1]}/",
+            f"Capsulith Studio: http://127.0.0.1:{server.server_address[1]}{path}",
             flush=True,
         )
+        print(f"Capsulith {__version__} · {view} · Ctrl-C to stop", flush=True)
         try:
             server.serve_forever()
         except KeyboardInterrupt:
-            pass
+            print("Capsulith Studio stopped.", flush=True)

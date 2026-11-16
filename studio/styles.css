@@ -481,8 +481,8 @@ input::placeholder {
   color: #486629;
 }
 .specimen-index {
-  font: 11px var(--mono);
-  color: #808c72;
+  font: 12px var(--mono);
+  color: var(--muted);
 }
 .specimen strong {
   font-size: 11px;
@@ -601,9 +601,9 @@ input::placeholder {
   background: transparent;
 }
 .capsule-empty .empty-limit {
-  font-size: 9px;
+  font-size: 12px;
   margin-top: 48px;
-  color: #89927e;
+  color: var(--muted);
 }
 .capsule-summary {
   display: flex;
@@ -945,7 +945,7 @@ select {
 .signal-line {
   letter-spacing: 5px;
   font-size: 20px;
-  color: #a5b296;
+  color: var(--muted);
   margin-bottom: 18px;
 }
 .results-empty p {
@@ -1619,4 +1619,20 @@ footer {
 .dependency-transfer > small {
   color: var(--muted);
   font-size: 8px;
+}
+
+/* Keep source identity and execution evidence readable. */
+:root { --muted: #53604c; }
+.small, .micro, .pane-heading .micro, .dropzone small,
+.function-support, .specimen p, .digest, .function-meta,
+.function-name, .execution-status, .stat span, .decoded,
+.output-buffer pre, .trace-detail, .trace-row, .trace-header,
+.field label, .field-hint, .import-checks, .count, .provenance,
+footer { font-size: 12px; letter-spacing: normal; }
+.digest { overflow-wrap: anywhere; }
+.pane-heading { flex-wrap: wrap; }
+.stat span { line-height: 1.5; }
+.stats { gap: 12px; }
+@media (max-width: 760px) {
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
