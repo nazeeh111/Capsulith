@@ -1,0 +1,183 @@
+{
+  "sourceCommit": "45e5ec4a02201e91c52d60b89b911e7b4d92b0c8",
+  "capturedAt": "2026-11-17T07:38:11.990Z",
+  "journey": "PNG baseline → original ARM64 QOI encode → separate native decode → saved JSON → original page closed → new page/fresh worker restore → native free",
+  "width": 128,
+  "height": 96,
+  "rgbaBytes": 49152,
+  "rgbaSHA256": "a0ec505c9f96f8cb5299fcc208e57068aca4e8217691dc2cf0ac45af32698507",
+  "restoredSHA256": "a0ec505c9f96f8cb5299fcc208e57068aca4e8217691dc2cf0ac45af32698507",
+  "encodedQoiBytes": 44561,
+  "encodedQoiSHA256": "189ddf13f5c1692cb24399c4270de9e61702d53e3d7fe1bdcc91d4ed47fabf8d",
+  "qoiFirst32": "716f696600000080000000600400fee97a60fee5816ffedc8d8bfecc9fb3feb4",
+  "status": "Encode → fresh decode verified. Every source RGBA byte matches; native image state preserved.",
+  "restoredStatus": "Preserved image reopened in a fresh worker. Actual pixel bytes read; native free completed.",
+  "identity": "Native memory & instance IDs\nOriginal instance\nc5798875-cb9b-437b-adef-3e79f67d5dd1\nPixel region\nregion3 · 49,152 B · 0x400e000\nRestored instance\na3f9552d-1774-4358-9ddd-eb87cf2cdb36\nNative lifecycle\nNative free completed; zero restored owned regions",
+  "nativeRecords": [
+    {
+      "label": "Compiled QOI encode",
+      "stats": {
+        "instructions": 808237,
+        "reads": 61444,
+        "writes": 93684,
+        "readBytes": 98362,
+        "writeBytes": 94005,
+        "traceEvents": 963366,
+        "regions": {
+          "stack": {
+            "name": "stack",
+            "kind": "stack",
+            "address": 536870912,
+            "reads": 12288,
+            "writes": 49132,
+            "readBytes": 49200,
+            "writeBytes": 49440,
+            "writeMin": 536936064,
+            "writeMax": 536936432,
+            "readMin": 536936064,
+            "readMax": 536936432
+          },
+          "region2": {
+            "name": "descriptor",
+            "kind": "buffer",
+            "address": 67162112,
+            "reads": 4,
+            "writes": 0,
+            "readBytes": 10,
+            "writeBytes": 0,
+            "readMin": 67162112,
+            "readMax": 67162122
+          },
+          "region4": {
+            "name": "heap1",
+            "kind": "heap",
+            "address": 67178496,
+            "reads": 0,
+            "writes": 44551,
+            "readBytes": 0,
+            "writeBytes": 44561,
+            "writeMin": 67178496,
+            "writeMax": 67223057
+          },
+          "region1": {
+            "name": "pixels",
+            "kind": "buffer",
+            "address": 67108864,
+            "reads": 49152,
+            "writes": 0,
+            "readBytes": 49152,
+            "writeBytes": 0,
+            "readMin": 67108864,
+            "readMax": 67158016
+          },
+          "region3": {
+            "name": "length",
+            "kind": "buffer",
+            "address": 67170304,
+            "reads": 0,
+            "writes": 1,
+            "readBytes": 0,
+            "writeBytes": 4,
+            "writeMin": 67170304,
+            "writeMax": 67170308
+          }
+        },
+        "imports": {
+          "malloc": 1
+        },
+        "allocations": [
+          {
+            "regionId": "region4",
+            "address": 67178496,
+            "size": 61462,
+            "initializedBytes": 0
+          }
+        ],
+        "frees": 0,
+        "wallMilliseconds": 137.5,
+        "totalInstructions": 808237
+      },
+      "instanceId": "799420fe-1c46-41a8-bc49-403dc21e4cce"
+    },
+    {
+      "label": "Compiled QOI decode",
+      "stats": {
+        "instructions": 556825,
+        "reads": 44568,
+        "writes": 98324,
+        "readBytes": 44633,
+        "writeBytes": 98610,
+        "traceEvents": 699718,
+        "regions": {
+          "stack": {
+            "name": "stack",
+            "kind": "stack",
+            "address": 536870912,
+            "reads": 24,
+            "writes": 49168,
+            "readBytes": 80,
+            "writeBytes": 49448,
+            "writeMin": 536936112,
+            "writeMax": 536936432,
+            "readMin": 536936200,
+            "readMax": 536936432
+          },
+          "region1": {
+            "name": "qoi-input",
+            "kind": "buffer",
+            "address": 67108864,
+            "reads": 44544,
+            "writes": 0,
+            "readBytes": 44553,
+            "writeBytes": 0,
+            "readMin": 67108864,
+            "readMax": 67153417
+          },
+          "region2": {
+            "name": "qoi-descriptor",
+            "kind": "buffer",
+            "address": 67158016,
+            "reads": 0,
+            "writes": 4,
+            "readBytes": 0,
+            "writeBytes": 10,
+            "writeMin": 67158016,
+            "writeMax": 67158026
+          },
+          "region3": {
+            "name": "heap1",
+            "kind": "heap",
+            "address": 67166208,
+            "reads": 0,
+            "writes": 49152,
+            "readBytes": 0,
+            "writeBytes": 49152,
+            "writeMin": 67166208,
+            "writeMax": 67215360
+          }
+        },
+        "imports": {
+          "malloc": 1
+        },
+        "allocations": [
+          {
+            "regionId": "region3",
+            "address": 67166208,
+            "size": 49152,
+            "initializedBytes": 0
+          }
+        ],
+        "frees": 0,
+        "wallMilliseconds": 110.19999999925494,
+        "totalInstructions": 556825
+      },
+      "instanceId": "c5798875-cb9b-437b-adef-3e79f67d5dd1"
+    }
+  ],
+  "browserVersion": "157.0.8103.79",
+  "overflow": {
+    "width": 375,
+    "scroll": 375
+  },
+  "errors": []
+}
