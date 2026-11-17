@@ -29,4 +29,4 @@ you may extract and redistribute. See LICENSE and THIRD_PARTY_NOTICES.md.
 manifest.json lists exact file bytes, SHA256 and Unix permissions except itself.
 
 
-Current workbenches: [native objects](studio/objects.html), [image memory](studio/image.html), and the [prepared LZ4 function](studio/index.html). The function example accepts editable declared inputs; arbitrary artifact extraction requires the local Python workspace. Current presentation and runtime follow source `4cdce6507dc75df7a05eaeae1be7ae041245194b`. The portable body attributes and component notices remain intact.
+Current workbenches: [native objects](studio/objects.html), [image memory](studio/image.html), and the [prepared LZ4 function](studio/index.html). The function example accepts editable declared inputs; arbitrary artifact extraction requires the local Python workspace. The object runtime follows reviewed source `55408b8927804a8b189aca8a9fc14d6c3008ec93`, including its shared worker host. The existing static function adaptation, portable body attributes, prepared specimens and component notices remain intact; arbitrary extraction still requires the local workspace.
