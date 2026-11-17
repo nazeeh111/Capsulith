@@ -2,6 +2,15 @@
 
 **Run preserved native code. Reopen its initialized state.** Capsulith packages selected ARM64 functions, their calling contracts and owned memory for Node or the browser. Keep the original instructions and resume an initialized object in a fresh worker, without the original application.
 
+[Open the image workbench](https://nazeeh111.github.io/Capsulith/studio/image.html) · [Reproduce this journey](docs/presentation/README.md) · [Supported artifact scope](#what-works-today)
+
+<picture>
+  <source media="(max-width: 600px)" srcset="docs/presentation/journey-mobile.png">
+  <img src="docs/presentation/journey.png" alt="Capsulith's verified image journey: original ARM64 QOI instructions encode 44,561 bytes; a separate native decoder returns all 49,152 RGBA bytes; after saving JSON and closing the page, a fresh worker reads identical pixels and completes native free.">
+</picture>
+
+The picture is the actual returned image. The record follows one bundled 128 × 96 PNG through **encode → separate decode → saved pixel heap → fresh-worker restore → native free**. All 49,152 RGBA bytes match across the boundary. [Exact measurements, instance identities and limits](docs/presentation/README.md) are retained with the [machine-readable execution record](docs/presentation/journey.json).
+
 ## Current development source
 
 This checkout is **0.3.2.dev0**, an unreleased successor to the published 0.3.1
@@ -14,9 +23,9 @@ JavaScript runtime package keeps its separate 0.2.0 identity.
 
 [Open the native image workbench](https://nazeeh111.github.io/Capsulith/studio/image.html) and choose **Load & run example**. The prepared QOI case runs locally without an account, upload server, original binary or compiler.
 
-![Bundled PNG after original ARM64 QOI encoding and decoding, with native pixels matching the browser source](docs/image-workbench-current.png)
+For the complete source-to-state journey, open the bundled [`orbit.png`](examples/qoi/orbit.png), choose **Encode & verify pixels**, then **Save preserved JSON**. Close the page, open a new workbench and use **Reopen preserved image**. The workbench exposes the original and restored instance IDs and the native free result.
 
-[Current capture and workflow evidence](docs/image-workbench-current.md).
+[Full workbench capture and earlier workflow evidence](docs/image-workbench-current.md).
 
 PNG uses browser-decoded RGBA as the explicit comparison baseline; QOI-only input has no independent source-pixel comparison. Images are bounded to 256 pixels per dimension and 1 MiB. This is a known-source prepared native component demonstration, not a new codec or universal format recovery. [Original QOI source, contracts, independent native/FFmpeg controls and standalone Node commands](examples/qoi/README.md).
 
