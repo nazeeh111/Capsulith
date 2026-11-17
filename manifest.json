@@ -16,8 +16,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 2244,
-      "sha256": "efab7db496fa364c3ef0ec23bc5c2456f13fc27cecf9ce7dc20d702fd97a6d98",
+      "bytes": 2388,
+      "sha256": "9a3ebc19c6e855cae697af5721200b5e719952d67d1227954c3dea8dd941254c",
       "mode": 420
     },
     {
@@ -201,6 +201,12 @@
       "mode": 420
     },
     {
+      "path": "runtime/object-host.js",
+      "bytes": 7678,
+      "sha256": "df6e8ec902041656543c6cc38a0f0339f9a86cc2a922a5176140049b7013cd9e",
+      "mode": 420
+    },
+    {
       "path": "runtime/object-worker.cjs",
       "bytes": 2425,
       "sha256": "3dd7cac13427cade87dee407487fb00eb81bfa00597259a7eb5d4db07064709f",
@@ -208,14 +214,14 @@
     },
     {
       "path": "runtime/objects.cjs",
-      "bytes": 7085,
-      "sha256": "e70c423db945afe611b4dd10854fa08826406318b75b8184b8ec3788c165a2bc",
+      "bytes": 875,
+      "sha256": "5ae597e5bbaa63cbef320406ab786a5c74adcedf605a87a9fe35849afd1d51dc",
       "mode": 420
     },
     {
       "path": "runtime/objects.mjs",
-      "bytes": 7117,
-      "sha256": "cf98636b4ea4ce75ac56d59acd6291c8fcba149a9ad10f4b26ef060b4c895e76",
+      "bytes": 1096,
+      "sha256": "4af4fd2a47e30e29dfc64bdc2a61de1d44e89551948e665b81939e98765d7880",
       "mode": 420
     },
     {
